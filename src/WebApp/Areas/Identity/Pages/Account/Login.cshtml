@@ -1,0 +1,51 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<div class="row justify-content-center align-items-center">
+    <div class="col col-md-8 col-lg-6 col-xl-4">
+        <div class="p-5">
+            <div class="text-center">
+                <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+            </div>
+            <form class="user" id="account" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <input class="form-control form-control-user" asp-for="Input.Username" placeholder="Enter Email or Username...">
+                    <span asp-validation-for="Input.Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input asp-for="Input.Password" class="form-control form-control-user" placeholder="Password">
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" class="custom-control-input" asp-for="Input.RememberMe">
+                        <label class="custom-control-label" asp-for="Input.RememberMe">Remember Me</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-user btn-block">
+                    Login
+                </button>
+            </form>
+
+            <hr />
+            <div class="text-center">
+                <a class="small" id="forgot-password" asp-page="./ForgotPassword">Forgot Password?</a>
+            </div>
+            @*<div class="text-center">
+                    <a class="small" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                </div>
+                <div class="text-center">
+                    <button type="submit" asp-page-handler="SendVerificationEmail" class="small btn-link" style="padding:0px;margin:0px;border:0px">Resend email confirmation</button>
+                </div>*@
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
