@@ -21,6 +21,7 @@ namespace Application.Schedules.Queries.GetSchedules
         public int GenId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+        public int RevNo { get; set; }
 
         public class GetUserByIdQueryHandler : IRequestHandler<GetSchedulesQuery, List<SchResponse>>
         {
@@ -45,12 +46,15 @@ namespace Application.Schedules.Queries.GetSchedules
                 NpgsqlCommand command = new(@$"SELECT sch_time, sch_val FROM public.gens_data 
                                                         where sch_type = @schType
                                                         and g_id = @g_id
+                                                        and rev = @rev
                                                         and sch_time between @startDate and @endDate order by sch_time", conn);
 
                 command.Parameters.AddWithValue("@schType", request.SchType);
                 command.Parameters.AddWithValue("@g_id", request.GenId);
+                command.Parameters.AddWithValue("@rev", request.RevNo);
                 command.Parameters.AddWithValue("@startDate", request.StartTime);
                 command.Parameters.AddWithValue("@endDate", request.EndTime);
+                
 
                 // Execute the query and obtain a result set
                 NpgsqlDataReader dr = await command.ExecuteReaderAsync(cancellationToken);
