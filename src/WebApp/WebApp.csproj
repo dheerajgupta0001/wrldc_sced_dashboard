@@ -7,10 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\js\dashboard\node_modules\**" />
     <Compile Remove="wwwroot\js\node_modules\**" />
+    <Content Remove="wwwroot\js\dashboard\node_modules\**" />
     <Content Remove="wwwroot\js\node_modules\**" />
+    <EmbeddedResource Remove="wwwroot\js\dashboard\node_modules\**" />
     <EmbeddedResource Remove="wwwroot\js\node_modules\**" />
+    <None Remove="wwwroot\js\dashboard\node_modules\**" />
     <None Remove="wwwroot\js\node_modules\**" />
+    <TypeScriptCompile Remove="wwwroot\js\dashboard\node_modules\**" />
     <TypeScriptCompile Remove="wwwroot\js\node_modules\**" />
   </ItemGroup>
 

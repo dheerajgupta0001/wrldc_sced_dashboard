@@ -5,7 +5,7 @@ export const getMonitorPgData = async (
     blockNo: number
 ): Promise<MonitorPgRespObj[] | null> => {
     try {
-        const resp = await fetch(`/api/monitorPg/${dateValue}/${blockNo}`, {
+        const resp = await fetch(`../api/monitorPg/${dateValue}/${blockNo}`, {
             method: "get",
         });
         const respJSON: MonitorPgRespObj[] = await resp.json();

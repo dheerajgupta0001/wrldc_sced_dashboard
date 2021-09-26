@@ -2,7 +2,7 @@ import { SchRespObj, AllGenRespObj } from "./respObj";
 
 export const getAllGenData = async (): Promise<AllGenRespObj[] | null> => {
     try {
-        const resp = await fetch(`/api/allGenerators`, {
+        const resp = await fetch(`../api/allGenerators`, {
             method: "get",
         });
         const respJSON: AllGenRespObj[] = await resp.json();
