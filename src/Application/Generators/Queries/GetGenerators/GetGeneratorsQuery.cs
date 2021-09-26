@@ -17,12 +17,9 @@ namespace Application.Generators.Queries.GetGenerators
         {
             private readonly string _scedConnStr;
 
-            private readonly IMapper _mapper;
-
-            public GetUserByIdQueryHandler(IConfiguration configuration, IMapper mapper)
+            public GetUserByIdQueryHandler(IConfiguration configuration)
             {
                 _scedConnStr = configuration["ConnectionStrings:ScedConnection"];
-                _mapper = mapper;
             }
 
             public async Task<List<GenResponse>> Handle(GetGeneratorsQuery request, CancellationToken cancellationToken)
