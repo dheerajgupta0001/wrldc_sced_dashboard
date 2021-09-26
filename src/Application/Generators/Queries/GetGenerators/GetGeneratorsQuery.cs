@@ -33,7 +33,7 @@ namespace Application.Generators.Queries.GetGenerators
                 NpgsqlConnection conn = new(_scedConnStr);
                 conn.Open();
 
-                NpgsqlCommand command = new(@$"SELECT id, g_name FROM public.gens ", conn);
+                NpgsqlCommand command = new(@$"SELECT id, g_name, vc, fuel_type, avg_pu_cap, tm_pu, rup_pu, rdn_pu FROM public.gens ", conn);
 
                 // Execute the query and obtain a result set
                 NpgsqlDataReader dr = await command.ExecuteReaderAsync(cancellationToken);
@@ -41,9 +41,25 @@ namespace Application.Generators.Queries.GetGenerators
                 {
                     while (dr.Read())
                     {
-                        string name = dr.GetString(1);
                         int id = dr.GetInt32(0);
-                        res.Add(new GenResponse() { name = name, id = id });
+                        string name = dr.GetString(1);
+                        float vcPu = dr.GetFloat(2);
+                        string fuelType = dr.GetString(3);
+                        float avgPuCap = dr.GetFloat(4);
+                        float tmPu = dr.GetFloat(5);
+                        float rUpPu = dr.GetFloat(6);
+                        float rDnPu = dr.GetFloat(7);
+                        res.Add(new GenResponse()
+                        {
+                            Id = id,
+                            Name = name,
+                            VcPu = vcPu,
+                            FuelType = fuelType,
+                            AvgPuCap = avgPuCap,
+                            TmPu = tmPu,
+                            RampUpPu = rUpPu,
+                            RampDownPu = rDnPu
+                        });
                     }
                     dr.NextResult();
                 }
