@@ -27,12 +27,9 @@ namespace Application.Schedules.Queries.GetSchedules
         {
             private readonly string _scedConnStr;
 
-            private readonly IMapper _mapper;
-
-            public GetUserByIdQueryHandler(IConfiguration configuration, IMapper mapper)
+            public GetUserByIdQueryHandler(IConfiguration configuration)
             {
                 _scedConnStr = configuration["ConnectionStrings:ScedConnection"];
-                _mapper = mapper;
             }
 
             public async Task<List<SchResponse>> Handle(GetSchedulesQuery request, CancellationToken cancellationToken)
@@ -54,7 +51,7 @@ namespace Application.Schedules.Queries.GetSchedules
                 command.Parameters.AddWithValue("@rev", request.RevNo);
                 command.Parameters.AddWithValue("@startDate", request.StartTime);
                 command.Parameters.AddWithValue("@endDate", request.EndTime);
-                
+
 
                 // Execute the query and obtain a result set
                 NpgsqlDataReader dr = await command.ExecuteReaderAsync(cancellationToken);
