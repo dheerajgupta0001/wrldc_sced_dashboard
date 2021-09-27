@@ -4,8 +4,8 @@ export const getPlotXYArrays = (measData) => {
     let timestamps = [];
     let vals = [];
     for (var i = 0; i < measData.length; i = i + 1) {
-        timestamps.push(toDateObj(measData[i].timestamp));
-        vals.push(measData[i].value);
+        timestamps.push(toDateObj(measData[i].schTime));
+        vals.push(measData[i].schVal);
     }
     return { timestamps: timestamps, vals: vals };
 };

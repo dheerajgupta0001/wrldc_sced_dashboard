@@ -85,9 +85,9 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
         });
         for (let genInd = 0; genInd < selectedGeneratorsList.length; genInd++) {
             let schfetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "sch", "R0", startDateValue, endDateValue);
-            let optFetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "optSch", "R0", startDateValue, endDateValue);
-            let onBarDcfetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "onBarDc", "R0", startDateValue, endDateValue);
-            let tmFetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "tm", "R0", startDateValue, endDateValue);
+            let optFetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "opt", "R0", startDateValue, endDateValue);
+            let onBarDcfetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "onbar", "R0", startDateValue, endDateValue);
+            let tmFetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "onbar", "R0", startDateValue, endDateValue);
             // console.log(schfetchedData);
             // console.log(optFetchedData);
             // console.log(onBarDcfetchedData);

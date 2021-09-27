@@ -6,6 +6,6 @@ export interface AllGenRespObj {
 }
 
 export interface SchRespObj {
-    timestamp: string;
-    value: number;
+    schTime: string;
+    schVal: number;
 }

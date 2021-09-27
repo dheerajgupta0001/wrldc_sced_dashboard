@@ -49,11 +49,13 @@ const fetchData = async () => {
     plotsWrapperDiv.innerHTML = "";
 
     //get user inputs
-    const startDateValue = (
+    let startDateValue = (
         document.getElementById("startDate") as HTMLInputElement
     ).value;
-    const endDateValue = (document.getElementById("endDate") as HTMLInputElement)
+    let endDateValue = (document.getElementById("endDate") as HTMLInputElement)
         .value;
+    startDateValue = startDateValue.replace(/-/g, "_") + "_00_00_00"
+    endDateValue = endDateValue.replace(/-/g, "_") + "_23_59_59"
     const generatorsOptions = (
         document.getElementById("generators") as HTMLSelectElement
     ).options;
@@ -102,31 +104,31 @@ const fetchData = async () => {
             let schfetchedData: SchRespObj[] = await getSchData(
                 selectedGeneratorsList[genInd].id,
                 "sch",
-                "R0",
+                0,
                 startDateValue,
                 endDateValue
             );
 
             let optFetchedData: SchRespObj[] = await getSchData(
                 selectedGeneratorsList[genInd].id,
-                "optSch",
-                "R0",
+                "opt",
+                0,
                 startDateValue,
                 endDateValue
             );
 
             let onBarDcfetchedData: SchRespObj[] = await getSchData(
                 selectedGeneratorsList[genInd].id,
-                "onBarDc",
-                "R0",
+                "onbar",
+                0,
                 startDateValue,
                 endDateValue
             );
 
             let tmFetchedData: SchRespObj[] = await getSchData(
                 selectedGeneratorsList[genInd].id,
-                "tm",
-                "R0",
+                "onbar",
+                0,
                 startDateValue,
                 endDateValue
             );

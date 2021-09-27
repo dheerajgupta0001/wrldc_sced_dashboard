@@ -22,7 +22,7 @@ export const getAllGenData = () => __awaiter(void 0, void 0, void 0, function* (
 });
 export const getSchData = (genId, schType, revNo, startDate, endDate) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const resp = yield fetch(`../api/schVsOpt/${genId}/${schType}/${revNo}/${startDate}/${endDate}`, {
+        const resp = yield fetch(`../api/schedules/get?genId=${genId}&schType=${schType}&rev=${revNo}&starttime=${startDate}&endtime=${endDate}`, {
             method: "get",
         });
         const respJSON = yield resp.json();

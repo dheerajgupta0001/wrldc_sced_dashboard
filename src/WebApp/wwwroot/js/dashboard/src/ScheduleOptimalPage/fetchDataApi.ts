@@ -16,13 +16,13 @@ export const getAllGenData = async (): Promise<AllGenRespObj[] | null> => {
 export const getSchData = async (
     genId: string,
     schType: string,
-    revNo: string,
+    revNo: number,
     startDate: string,
     endDate: string
 ): Promise<SchRespObj[] | null> => {
     try {
         const resp = await fetch(
-            `../api/schVsOpt/${genId}/${schType}/${revNo}/${startDate}/${endDate}`,
+            `../api/schedules/get?genId=${genId}&schType=${schType}&rev=${revNo}&starttime=${startDate}&endtime=${endDate}`,
             {
                 method: "get",
             }
