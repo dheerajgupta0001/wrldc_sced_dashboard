@@ -15,7 +15,7 @@ using Npgsql;
 
 namespace Application.Schedules.Queries.GetSchedules
 {
-    public class GetSchedulesQuery : IRequest<List<SchResponse>>
+    public class GetSchedulesQuery : IRequest<SchResponse>
     {
         public string SchType { get; set; }
         public int GenId { get; set; }
@@ -23,7 +23,7 @@ namespace Application.Schedules.Queries.GetSchedules
         public DateTime EndTime { get; set; }
         public int RevNo { get; set; }
 
-        public class GetUserByIdQueryHandler : IRequestHandler<GetSchedulesQuery, List<SchResponse>>
+        public class GetUserByIdQueryHandler : IRequestHandler<GetSchedulesQuery, SchResponse>
         {
             private readonly string _scedConnStr;
 
@@ -32,22 +32,39 @@ namespace Application.Schedules.Queries.GetSchedules
                 _scedConnStr = configuration["ConnectionStrings:ScedConnection"];
             }
 
-            public async Task<List<SchResponse>> Handle(GetSchedulesQuery request, CancellationToken cancellationToken)
+            public async Task<SchResponse> Handle(GetSchedulesQuery request, CancellationToken cancellationToken)
             {
-                List<SchResponse> res = new();
+                SchResponse res = new();
+                res.GenSchedules = new();
 
                 // Connect to a PostgreSQL database
                 NpgsqlConnection conn = new(_scedConnStr);
                 conn.Open();
 
-                NpgsqlCommand command = new(@$"SELECT sch_time, sch_val FROM public.gens_data 
-                                                        where sch_type = @schType
-                                                        and g_id = @g_id
-                                                        and rev = @rev
-                                                        and sch_time between @startDate and @endDate order by sch_time", conn);
-
+                string cmdStr = @"SELECT g_id, sch_time, sch_val FROM public.gens_data 
+                                where sch_type = @schType
+                                and g_id = @g_id
+                                and rev = @rev
+                                and sch_time between @startDate and @endDate order by sch_time";
+                if (request.GenId == -1)
+                {
+                    cmdStr.Replace("and g_id = @g_id", "");
+                }
+                else if (request.GenId == 0)
+                {
+                    cmdStr = @"SELECT 0 as g_id, sch_time, sum(sch_val) FROM public.gens_data 
+                                where sch_type = @schType
+                                and rev = @rev
+                                and sch_time between @startDate and @endDate 
+                                group by sch_time 
+                                order by sch_time";
+                }
+                NpgsqlCommand command = new(cmdStr, conn);
                 command.Parameters.AddWithValue("@schType", request.SchType);
-                command.Parameters.AddWithValue("@g_id", request.GenId);
+                if (request.GenId != -1 && request.GenId != 0)
+                {
+                    command.Parameters.AddWithValue("@g_id", request.GenId);
+                }
                 command.Parameters.AddWithValue("@rev", request.RevNo);
                 command.Parameters.AddWithValue("@startDate", request.StartTime);
                 command.Parameters.AddWithValue("@endDate", request.EndTime);
@@ -59,9 +76,14 @@ namespace Application.Schedules.Queries.GetSchedules
                 {
                     while (dr.Read())
                     {
-                        DateTime dt = dr.GetDateTime(0);
-                        float val = dr.GetFloat(1);
-                        res.Add(new SchResponse() { SchTime = dt.ToString("yyyy_MM_dd_HH_mm_ss"), SchVal = val });
+                        int genId = dr.GetInt32(0);
+                        DateTime dt = dr.GetDateTime(1);
+                        float val = dr.GetFloat(2);
+                        if (!res.GenSchedules.ContainsKey(genId))
+                        {
+                            res.GenSchedules[genId] = new List<SchTsRow>();
+                        }
+                        res.GenSchedules[genId].Add(new SchTsRow() { SchTime = dt.ToString("yyyy_MM_dd_HH_mm_ss"), SchVal = val });
                     }
                     dr.NextResult();
                 }

@@ -2,10 +2,16 @@
 
 export interface AllGenRespObj {
     name: string;
-    id: string;
+    id: number;
 }
 
 export interface SchRespObj {
+    genSchedules: {
+        [genId: number]: SchTsRowObj[]
+    };
+}
+
+export interface SchTsRowObj {
     schTime: string;
     schVal: number;
 }

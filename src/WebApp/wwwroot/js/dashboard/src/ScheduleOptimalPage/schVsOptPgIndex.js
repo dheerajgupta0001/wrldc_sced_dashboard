@@ -17,13 +17,13 @@ window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
     for (let i = 0; i < fetchedGeneratorsData.length; i++) {
         let option = document.createElement("option");
         option.text = fetchedGeneratorsData[i].name;
-        option.value = fetchedGeneratorsData[i].id;
+        option.value = `${fetchedGeneratorsData[i].id}`;
         dropdown.add(option);
     }
     // drop down in case of  all Generators
     let option = document.createElement("option");
     option.text = "ALL";
-    option.value = "ALL_GEN";
+    option.value = "0";
     dropdown.add(option);
     //providing multiple selection options
     var multipleCancelButton = new Choices("#generators", {
@@ -43,9 +43,11 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
     // clearing earlier div(except for first api call)
     plotsWrapperDiv.innerHTML = "";
     //get user inputs
-    const startDateValue = document.getElementById("startDate").value;
-    const endDateValue = document.getElementById("endDate")
+    let startDateValue = document.getElementById("startDate").value;
+    let endDateValue = document.getElementById("endDate")
         .value;
+    startDateValue = startDateValue.replace(/-/g, "_") + "_00_00_00";
+    endDateValue = endDateValue.replace(/-/g, "_") + "_23_59_59";
     const generatorsOptions = document.getElementById("generators").options;
     // storing user selected generators from dropdown in List
     let selectedGeneratorsList = [];
@@ -53,7 +55,7 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
         if (option.selected) {
             let selecetedGenObj = {
                 name: option.text,
-                id: option.value,
+                id: +option.value,
             };
             selectedGeneratorsList.push(selecetedGenObj);
         }
@@ -83,11 +85,12 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
             upVsDwnResDiv.id = `${value.name}_upVsdwnRes`;
             plotsWrapperDiv.appendChild(upVsDwnResDiv);
         });
+        console.log(selectedGeneratorsList);
         for (let genInd = 0; genInd < selectedGeneratorsList.length; genInd++) {
-            let schfetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "sch", "R0", startDateValue, endDateValue);
-            let optFetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "opt", "R0", startDateValue, endDateValue);
-            let onBarDcfetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "onbar", "R0", startDateValue, endDateValue);
-            let tmFetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "onbar", "R0", startDateValue, endDateValue);
+            let schfetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "sch", 0, startDateValue, endDateValue);
+            let optFetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "opt", 0, startDateValue, endDateValue);
+            let onBarDcfetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "onbar", 0, startDateValue, endDateValue);
+            let tmFetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "onbar", 0, startDateValue, endDateValue);
             // console.log(schfetchedData);
             // console.log(optFetchedData);
             // console.log(onBarDcfetchedData);
@@ -101,7 +104,7 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
                 line: {
                     width: 8,
                 },
-                data: schfetchedData,
+                data: schfetchedData[selectedGeneratorsList[genInd].id],
                 fill: "tozeroy",
             };
             plotData.traces.push(schDataTrace);
@@ -110,7 +113,7 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
                 line: {
                     width: 8,
                 },
-                data: optFetchedData,
+                data: optFetchedData[selectedGeneratorsList[genInd].id],
                 fill: "tozeroy",
             };
             plotData.traces.push(optSchTrace);
@@ -119,7 +122,7 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
                 line: {
                     width: 8,
                 },
-                data: onBarDcfetchedData,
+                data: onBarDcfetchedData[selectedGeneratorsList[genInd].id],
                 fill: "tozeroy",
             };
             plotData.traces.push(onBarDcTrace);
@@ -128,7 +131,7 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
                 line: {
                     width: 8,
                 },
-                data: tmFetchedData,
+                data: tmFetchedData[selectedGeneratorsList[genInd].id],
                 fill: "tozeroy",
             };
             plotData.traces.push(tmTrace);

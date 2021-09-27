@@ -14,12 +14,12 @@ export const getAllGenData = async (): Promise<AllGenRespObj[] | null> => {
 };
 
 export const getSchData = async (
-    genId: string,
+    genId: number,
     schType: string,
     revNo: number,
     startDate: string,
     endDate: string
-): Promise<SchRespObj[] | null> => {
+): Promise<SchRespObj | null> => {
     try {
         const resp = await fetch(
             `../api/schedules/get?genId=${genId}&schType=${schType}&rev=${revNo}&starttime=${startDate}&endtime=${endDate}`,
@@ -27,7 +27,7 @@ export const getSchData = async (
                 method: "get",
             }
         );
-        const respJSON: SchRespObj[] = await resp.json();
+        const respJSON: SchRespObj = await resp.json();
         return respJSON;
     } catch (e) {
         console.error(e);

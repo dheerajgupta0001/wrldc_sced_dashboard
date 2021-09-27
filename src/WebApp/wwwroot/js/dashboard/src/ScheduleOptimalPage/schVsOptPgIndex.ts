@@ -6,7 +6,7 @@ import { PlotData, PlotTrace, setPlotTraces } from "./plotUtils";
 
 export interface SelectedGenObj {
     name: string;
-    id: string;
+    id: number;
 }
 
 let intervalID = null;
@@ -17,13 +17,13 @@ window.onload = async () => {
     for (let i = 0; i < fetchedGeneratorsData.length; i++) {
         let option = document.createElement("option");
         option.text = fetchedGeneratorsData[i].name;
-        option.value = fetchedGeneratorsData[i].id;
+        option.value = `${fetchedGeneratorsData[i].id}`;
         dropdown.add(option);
     }
     // drop down in case of  all Generators
     let option = document.createElement("option");
     option.text = "ALL";
-    option.value = "ALL_GEN";
+    option.value = "0";
     dropdown.add(option);
 
     //providing multiple selection options
@@ -66,7 +66,7 @@ const fetchData = async () => {
         if (option.selected) {
             let selecetedGenObj: SelectedGenObj = {
                 name: option.text,
-                id: option.value,
+                id: +option.value,
             };
             selectedGeneratorsList.push(selecetedGenObj);
         }
@@ -99,9 +99,8 @@ const fetchData = async () => {
             upVsDwnResDiv.id = `${value.name}_upVsdwnRes`;
             plotsWrapperDiv.appendChild(upVsDwnResDiv);
         });
-
         for (let genInd = 0; genInd < selectedGeneratorsList.length; genInd++) {
-            let schfetchedData: SchRespObj[] = await getSchData(
+            let schfetchedData: SchRespObj = await getSchData(
                 selectedGeneratorsList[genInd].id,
                 "sch",
                 0,
@@ -109,7 +108,7 @@ const fetchData = async () => {
                 endDateValue
             );
 
-            let optFetchedData: SchRespObj[] = await getSchData(
+            let optFetchedData: SchRespObj = await getSchData(
                 selectedGeneratorsList[genInd].id,
                 "opt",
                 0,
@@ -117,7 +116,7 @@ const fetchData = async () => {
                 endDateValue
             );
 
-            let onBarDcfetchedData: SchRespObj[] = await getSchData(
+            let onBarDcfetchedData: SchRespObj = await getSchData(
                 selectedGeneratorsList[genInd].id,
                 "onbar",
                 0,
@@ -125,17 +124,17 @@ const fetchData = async () => {
                 endDateValue
             );
 
-            let tmFetchedData: SchRespObj[] = await getSchData(
+            let tmFetchedData: SchRespObj = await getSchData(
                 selectedGeneratorsList[genInd].id,
                 "onbar",
                 0,
                 startDateValue,
                 endDateValue
             );
-            // console.log(schfetchedData);
-            // console.log(optFetchedData);
-            // console.log(onBarDcfetchedData);
-            // console.log(tmFetchedData);
+             console.log(schfetchedData);
+             console.log(optFetchedData);
+             console.log(onBarDcfetchedData);
+             console.log(tmFetchedData);
             let plotData: PlotData = {
                 title: `${selectedGeneratorsList[genInd].name} Schedule Vs Optimal `,
                 traces: [],
@@ -146,7 +145,7 @@ const fetchData = async () => {
                 line: {
                     width: 8,
                 },
-                data: schfetchedData,
+                data: schfetchedData.genSchedules[selectedGeneratorsList[genInd].id],
                 fill: "tozeroy",
             };
             plotData.traces.push(schDataTrace);
@@ -156,7 +155,7 @@ const fetchData = async () => {
                 line: {
                     width: 8,
                 },
-                data: optFetchedData,
+                data: optFetchedData.genSchedules[selectedGeneratorsList[genInd].id],
                 fill: "tozeroy",
             };
             plotData.traces.push(optSchTrace);
@@ -166,7 +165,7 @@ const fetchData = async () => {
                 line: {
                     width: 8,
                 },
-                data: onBarDcfetchedData,
+                data: onBarDcfetchedData.genSchedules[selectedGeneratorsList[genInd].id],
                 fill: "tozeroy",
             };
             plotData.traces.push(onBarDcTrace);
@@ -176,11 +175,12 @@ const fetchData = async () => {
                 line: {
                     width: 8,
                 },
-                data: tmFetchedData,
+                data: tmFetchedData.genSchedules[selectedGeneratorsList[genInd].id],
                 fill: "tozeroy",
             };
             plotData.traces.push(tmTrace);
 
+            console.log(plotData)
             setPlotTraces(
                 `${selectedGeneratorsList[genInd].name}_schVsOpt`,
                 plotData

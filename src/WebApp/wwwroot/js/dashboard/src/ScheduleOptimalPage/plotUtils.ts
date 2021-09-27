@@ -1,11 +1,11 @@
- import Plotly from "plotly.js-dist";
+import Plotly from "plotly.js-dist";
 //declare var Plotly: any;
-import { SchRespObj } from "./respObj";
+import { SchTsRowObj } from "./respObj";
 import { toDateObj } from "../timeUtils";
 
 export interface PlotTrace {
     name: string;
-    data: SchRespObj[];
+    data: SchTsRowObj[];
     line?: { color?: string; width?: number };
     visible?: string | boolean;
     fill: string;
