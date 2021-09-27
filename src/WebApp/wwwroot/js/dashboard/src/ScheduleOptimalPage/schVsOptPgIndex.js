@@ -1,19 +1,19 @@
-// declare var $:any;
-declare var Choices: any;
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { getAllGenData, getSchData } from "./fetchDataApi";
-import { AllGenRespObj, SchRespObj } from "./respObj";
-import { PlotData, PlotTrace, setPlotTraces } from "./plotUtils";
-
-export interface SelectedGenObj {
-    name: string;
-    id: string;
-}
-
+import { setPlotTraces } from "./plotUtils";
 let intervalID = null;
-window.onload = async () => {
+window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
     //dynamically populating generator dropdown using api
-    let dropdown = document.getElementById("generators") as HTMLSelectElement;
-    const fetchedGeneratorsData: AllGenRespObj[] = await getAllGenData();
+    let dropdown = document.getElementById("generators");
+    const fetchedGeneratorsData = yield getAllGenData();
     for (let i = 0; i < fetchedGeneratorsData.length; i++) {
         let option = document.createElement("option");
         option.text = fetchedGeneratorsData[i].name;
@@ -25,7 +25,6 @@ window.onload = async () => {
     option.text = "ALL";
     option.value = "ALL_GEN";
     dropdown.add(option);
-
     //providing multiple selection options
     var multipleCancelButton = new Choices("#generators", {
         removeItemButton: true,
@@ -33,43 +32,32 @@ window.onload = async () => {
         searchResultLimit: 50,
         renderChoiceLimit: 50,
     });
-
-    (document.getElementById("submitBtn") as HTMLButtonElement).onclick =
+    document.getElementById("submitBtn").onclick =
         fetchData;
-};
-
-const fetchData = async () => {
+});
+const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
     //to display error msg
-    const errorDiv = document.getElementById("errorDiv") as HTMLDivElement;
-
+    const errorDiv = document.getElementById("errorDiv");
     // selecting plotswrapper div to generate div dynamically
-    let plotsWrapperDiv = <HTMLDivElement>document.getElementById("plotsWrapper");
-
+    let plotsWrapperDiv = document.getElementById("plotsWrapper");
     // clearing earlier div(except for first api call)
     plotsWrapperDiv.innerHTML = "";
-
     //get user inputs
-    const startDateValue = (
-        document.getElementById("startDate") as HTMLInputElement
-    ).value;
-    const endDateValue = (document.getElementById("endDate") as HTMLInputElement)
+    const startDateValue = document.getElementById("startDate").value;
+    const endDateValue = document.getElementById("endDate")
         .value;
-    const generatorsOptions = (
-        document.getElementById("generators") as HTMLSelectElement
-    ).options;
-
+    const generatorsOptions = document.getElementById("generators").options;
     // storing user selected generators from dropdown in List
-    let selectedGeneratorsList: SelectedGenObj[] = [];
+    let selectedGeneratorsList = [];
     for (let option of generatorsOptions) {
         if (option.selected) {
-            let selecetedGenObj: SelectedGenObj = {
+            let selecetedGenObj = {
                 name: option.text,
                 id: option.value,
             };
             selectedGeneratorsList.push(selecetedGenObj);
         }
     }
-
     //validation checks, and displaying msg in error div
     if (startDateValue === "" || endDateValue === "") {
         errorDiv.innerHTML = "<b> Please Enter a Valid Start Date/End Date</b>";
@@ -84,62 +72,31 @@ const fetchData = async () => {
     else {
         //if reached this ,means no validation error ,emptying error div
         errorDiv.innerHTML = "";
-
         //adding schVsOpt div and upVsDwnReserve div for each selected generators
-        selectedGeneratorsList.forEach((value: SelectedGenObj, ind) => {
+        selectedGeneratorsList.forEach((value, ind) => {
             // div for plotting schedule vs optimal schedule
             let schVsOptDiv = document.createElement("div");
             schVsOptDiv.id = `${value.name}_schVsOpt`;
             plotsWrapperDiv.appendChild(schVsOptDiv);
-
             // div for plotting Up vs Down Reserve
             let upVsDwnResDiv = document.createElement("div");
             upVsDwnResDiv.id = `${value.name}_upVsdwnRes`;
             plotsWrapperDiv.appendChild(upVsDwnResDiv);
         });
-
         for (let genInd = 0; genInd < selectedGeneratorsList.length; genInd++) {
-            let schfetchedData: SchRespObj[] = await getSchData(
-                selectedGeneratorsList[genInd].id,
-                "sch",
-                "R0",
-                startDateValue,
-                endDateValue
-            );
-
-            let optFetchedData: SchRespObj[] = await getSchData(
-                selectedGeneratorsList[genInd].id,
-                "optSch",
-                "R0",
-                startDateValue,
-                endDateValue
-            );
-
-            let onBarDcfetchedData: SchRespObj[] = await getSchData(
-                selectedGeneratorsList[genInd].id,
-                "onBarDc",
-                "R0",
-                startDateValue,
-                endDateValue
-            );
-
-            let tmFetchedData: SchRespObj[] = await getSchData(
-                selectedGeneratorsList[genInd].id,
-                "tm",
-                "R0",
-                startDateValue,
-                endDateValue
-            );
+            let schfetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "sch", "R0", startDateValue, endDateValue);
+            let optFetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "optSch", "R0", startDateValue, endDateValue);
+            let onBarDcfetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "onBarDc", "R0", startDateValue, endDateValue);
+            let tmFetchedData = yield getSchData(selectedGeneratorsList[genInd].id, "tm", "R0", startDateValue, endDateValue);
             // console.log(schfetchedData);
             // console.log(optFetchedData);
             // console.log(onBarDcfetchedData);
             // console.log(tmFetchedData);
-            let plotData: PlotData = {
+            let plotData = {
                 title: `${selectedGeneratorsList[genInd].name} Schedule Vs Optimal `,
                 traces: [],
             };
-
-            let schDataTrace: PlotTrace = {
+            let schDataTrace = {
                 name: "Schedule",
                 line: {
                     width: 8,
@@ -148,8 +105,7 @@ const fetchData = async () => {
                 fill: "tozeroy",
             };
             plotData.traces.push(schDataTrace);
-
-            let optSchTrace: PlotTrace = {
+            let optSchTrace = {
                 name: "Optimal-Schedule",
                 line: {
                     width: 8,
@@ -158,8 +114,7 @@ const fetchData = async () => {
                 fill: "tozeroy",
             };
             plotData.traces.push(optSchTrace);
-
-            let onBarDcTrace: PlotTrace = {
+            let onBarDcTrace = {
                 name: "Pmax",
                 line: {
                     width: 8,
@@ -168,8 +123,7 @@ const fetchData = async () => {
                 fill: "tozeroy",
             };
             plotData.traces.push(onBarDcTrace);
-
-            let tmTrace: PlotTrace = {
+            let tmTrace = {
                 name: "Pmin",
                 line: {
                     width: 8,
@@ -178,11 +132,8 @@ const fetchData = async () => {
                 fill: "tozeroy",
             };
             plotData.traces.push(tmTrace);
-
-            setPlotTraces(
-                `${selectedGeneratorsList[genInd].name}_schVsOpt`,
-                plotData
-            );
+            setPlotTraces(`${selectedGeneratorsList[genInd].name}_schVsOpt`, plotData);
         }
     }
-};
+});
+//# sourceMappingURL=schVsOptPgIndex.js.map

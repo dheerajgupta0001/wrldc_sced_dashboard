@@ -1,7 +1,7 @@
 //interfaces for api response object
 
 export interface AllGenRespObj {
-    genName: string;
+    name: string;
     id: string;
 }
 
