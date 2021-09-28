@@ -91,6 +91,7 @@ const fetchData = async () => {
 
     //adding schVsOpt div and upVsDwnReserve div for each selected generators
     selectedGeneratorsList.forEach((value: SelectedGenObj, ind) => {
+
       // div for  cost reduction sum showing
       let costRedSumDiv = document.createElement("div");
       costRedSumDiv.id = `${value.name}_costRedSum`;
@@ -102,10 +103,20 @@ const fetchData = async () => {
       costRedDiv.id = `${value.name}_costRed`;
       plotsWrapperDiv.appendChild(costRedDiv);
 
+      // div for plotting horizontal rule
+      let hrDiv1 = document.createElement("div");
+      hrDiv1.className = "hrStyle";
+      plotsWrapperDiv.appendChild(hrDiv1);
+
       // div for plotting schedule vs optimal cost
       let schVsOptCostDiv = document.createElement("div");
       schVsOptCostDiv.id = `${value.name}_schVsOptCost`;
       plotsWrapperDiv.appendChild(schVsOptCostDiv);
+
+      // div for plotting horizontal rule
+      let hrDiv2 = document.createElement("div");
+      hrDiv2.className = "hrStyle";
+      plotsWrapperDiv.appendChild(hrDiv2);
     });
     for (let genInd = 0; genInd < selectedGeneratorsList.length; genInd++) {
       let schData: SchTsRowObj[] = [];

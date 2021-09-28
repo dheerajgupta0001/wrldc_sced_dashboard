@@ -88,15 +88,26 @@ const fetchData = async () => {
 
     //adding schVsOpt div and upVsDwnReserve div for each selected generators
     selectedGeneratorsList.forEach((value: SelectedGenObj, ind) => {
+
       // div for plotting schedule vs optimal schedule
       let schVsOptDiv = document.createElement("div");
       schVsOptDiv.id = `${value.name}_schVsOpt`;
       plotsWrapperDiv.appendChild(schVsOptDiv);
 
+      // div for plotting horizontal rule
+      let hrDiv1 = document.createElement("div");
+      hrDiv1.className = "hrStyle";
+      plotsWrapperDiv.appendChild(hrDiv1);
+
       // div for plotting Up vs Down Reserve
       let upVsDwnResDiv = document.createElement("div");
       upVsDwnResDiv.id = `${value.name}_upVsdwnRes`;
       plotsWrapperDiv.appendChild(upVsDwnResDiv);
+
+      // div for plotting horizontal rule
+      let hrDiv2 = document.createElement("div");
+      hrDiv2.className = "hrStyle";
+      plotsWrapperDiv.appendChild(hrDiv2);
     });
     for (let genInd = 0; genInd < selectedGeneratorsList.length; genInd++) {
       let tmData: SchTsRowObj[] = [];

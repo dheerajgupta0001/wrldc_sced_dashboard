@@ -27,8 +27,16 @@ input {
    /* height: 70px;*/
 }
 
+.hrStyle {
+    height: 10px;
+    border: 0;
+    box-shadow: 0 10px 10px -10px #8c8b8b inset;
+}
+
 .important {
     color: #dc3545;
+    font-size:20px;
+    font-weight:bolder;
     animation: blinker 1s linear infinite;
 }
 
