@@ -1,5 +1,5 @@
 import Plotly from "plotly.js-dist";
-import { toDateObj } from "../timeUtils";
+import { toDateObj } from "./timeUtils";
 export const getPlotXYArrays = (measData) => {
     let timestamps = [];
     let vals = [];
@@ -41,10 +41,9 @@ export const setPlotTraces = (divId, plotData) => {
             showline: true,
             titlefont: { color: "#000", size: 22 },
             tickfont: { color: "#000", size: 15 },
-            tickmode: "linear",
-            // tick0: startTime,
-            dtick: 15 * 60 * 1000,
-            automargin: true,
+            //tickmode: "linear",
+            //dtick: 180 * 60 * 1000,
+            //automargin: true,
             tickangle: 283,
         },
         yaxis: {
@@ -62,7 +61,6 @@ export const setPlotTraces = (divId, plotData) => {
     for (var traceIter = 0; traceIter < plotData.traces.length; traceIter++) {
         const trace = plotData.traces[traceIter];
         const xyData = getPlotXYArrays(trace.data);
-        console.log(xyData);
         // creating different graph for bias error  , which is 2nd index of plotdata.traces
         let traceObj = {
             x: xyData.timestamps,

@@ -1,34 +1,15 @@
 import Plotly from "plotly.js-dist";
-//declare var Plotly: any;
-import { SchTsRowObj } from "./respObj";
 import { toDateObj } from "../timeUtils";
-
-export interface PlotTrace {
-    name: string;
-    data: SchTsRowObj[];
-    line?: { color?: string; width?: number };
-    visible?: string | boolean;
-    fill: string;
-}
-
-export interface PlotData {
-    title: string;
-    traces: PlotTrace[];
-}
-
-export const getPlotXYArrays = (
-    measData: PlotTrace["data"]
-): { timestamps: Date[]; vals: number[] } => {
-    let timestamps: Date[] = [];
-    let vals: number[] = [];
+export const getPlotXYArrays = (measData) => {
+    let timestamps = [];
+    let vals = [];
     for (var i = 0; i < measData.length; i = i + 1) {
         timestamps.push(toDateObj(measData[i].schTime));
-        vals.push(measData[i].schVal as number);
+        vals.push(measData[i].schVal);
     }
     return { timestamps: timestamps, vals: vals };
 };
-
-export const setPlotTraces = (divId: string, plotData: PlotData) => {
+export const setPlotTraces = (divId, plotData) => {
     let traceData = [];
     const layout = {
         title: {
@@ -49,7 +30,6 @@ export const setPlotTraces = (divId: string, plotData: PlotData) => {
                 size: 15,
             },
         },
-
         autosize: true,
         height: 600,
         width: 1500,
@@ -61,14 +41,13 @@ export const setPlotTraces = (divId: string, plotData: PlotData) => {
             showline: true,
             titlefont: { color: "#000", size: 22 },
             tickfont: { color: "#000", size: 15 },
-            tickmode: "linear",
-            // tick0: startTime,
-            dtick: 15 * 60 * 1000,
-            automargin: true,
+            //tickmode: "linear",
+            //dtick: 180 * 60 * 1000,
+            //automargin: true,
             tickangle: 283,
         },
         yaxis: {
-            title: "MW ",
+            title: "Cost(In Rs) ",
             showgrid: true,
             zeroline: true,
             showspikes: true,
@@ -76,14 +55,12 @@ export const setPlotTraces = (divId: string, plotData: PlotData) => {
             showline: true,
             titlefont: { color: "#000" },
             tickfont: { color: "#000", size: 18 },
-            tickformat: "digits",
+            //tickformat: "digits",
         },
     };
-
     for (var traceIter = 0; traceIter < plotData.traces.length; traceIter++) {
         const trace = plotData.traces[traceIter];
         const xyData = getPlotXYArrays(trace.data);
-        console.log(xyData);
         // creating different graph for bias error  , which is 2nd index of plotdata.traces
         let traceObj = {
             x: xyData.timestamps,
@@ -105,6 +82,6 @@ export const setPlotTraces = (divId: string, plotData: PlotData) => {
         }
         traceData.push(traceObj);
     }
-
     Plotly.newPlot(divId, traceData, layout);
 };
+//# sourceMappingURL=costPlotUtils.js.map

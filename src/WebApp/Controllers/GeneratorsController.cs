@@ -27,6 +27,7 @@ namespace WebApp.Controllers
         public async Task<List<GenResponse>> GetAsync()
         {
             List<GenResponse> res = await _mediator.Send(new GetGeneratorsQuery());
+            //Console.WriteLine(res);
             return res;
         }
 

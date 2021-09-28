@@ -1,8 +1,4 @@
-﻿th {
-    color: white;
-    background: #dc3545;
-}
-
+﻿
 #errorDiv {
     color: #dc3545;
 }
@@ -11,7 +7,6 @@ label {
     color: #0062cc;
     font-weight: 500;
 }
-
 input {
     display: block;
     width: 100%;
@@ -20,20 +15,25 @@ input {
     box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
     border-radius: 10px;
 }
-
 .choices__input {
     border-radius: 25px;
     border: 2px solid #73ad21;
     padding: 2px;
-    height: 40px;
+    /*height: 40px;*/
 }
 
 .choices__inner {
     border-radius: 25px;
-    height: 70px;
+   /* height: 70px;*/
 }
 
-tr {
-    color: hsl(0, 75%, 14%);
-    font-weight: 500;
+.important {
+    color: #dc3545;
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
 }

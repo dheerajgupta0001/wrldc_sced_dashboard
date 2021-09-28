@@ -2,9 +2,12 @@
 declare var Choices: any;
 import { getAllGenData, getSchData } from "../fetchDataApi";
 import { AllGenRespObj, SchRespObj, SchTsRowObj } from "../respObj";
-import { PlotData, PlotTrace, setPlotTraces } from "../plotUtils";
-import { calculateReserve } from "./reserveCalculator";
-import { calTmAllGenApi, calTmSingleGenApi } from "./techMinCalculator";
+import { PlotData, PlotTrace, setPlotTraces } from "./costPlotUtils";
+import {
+  calCostRedForAllGen,
+  calCostRedForSingleGen,
+} from "./calculateCostRed";
+import { calCostForAllGen, calCostForSingleGen } from "./calculateCost";
 
 export interface SelectedGenObj {
   name: string;
@@ -88,21 +91,28 @@ const fetchData = async () => {
 
     //adding schVsOpt div and upVsDwnReserve div for each selected generators
     selectedGeneratorsList.forEach((value: SelectedGenObj, ind) => {
-      // div for plotting schedule vs optimal schedule
-      let schVsOptDiv = document.createElement("div");
-      schVsOptDiv.id = `${value.name}_schVsOpt`;
-      plotsWrapperDiv.appendChild(schVsOptDiv);
+      // div for  cost reduction sum showing
+      let costRedSumDiv = document.createElement("div");
+      costRedSumDiv.id = `${value.name}_costRedSum`;
+      costRedSumDiv.className = "important";
+      plotsWrapperDiv.appendChild(costRedSumDiv);
 
-      // div for plotting Up vs Down Reserve
-      let upVsDwnResDiv = document.createElement("div");
-      upVsDwnResDiv.id = `${value.name}_upVsdwnRes`;
-      plotsWrapperDiv.appendChild(upVsDwnResDiv);
+      // div for plotting cost reduction
+      let costRedDiv = document.createElement("div");
+      costRedDiv.id = `${value.name}_costRed`;
+      plotsWrapperDiv.appendChild(costRedDiv);
+
+      // div for plotting schedule vs optimal cost
+      let schVsOptCostDiv = document.createElement("div");
+      schVsOptCostDiv.id = `${value.name}_schVsOptCost`;
+      plotsWrapperDiv.appendChild(schVsOptCostDiv);
     });
     for (let genInd = 0; genInd < selectedGeneratorsList.length; genInd++) {
-      let tmData: SchTsRowObj[] = [];
-      let onBarDcData: SchTsRowObj[] = [];
       let schData: SchTsRowObj[] = [];
       let optSchData: SchTsRowObj[] = [];
+      let costRedData: SchTsRowObj[] = [];
+      let normalCost: SchTsRowObj[] = [];
+      let optCost: SchTsRowObj[] = [];
 
       let schfetchedData: SchRespObj = await getSchData(
         selectedGeneratorsList[genInd].id,
@@ -123,111 +133,97 @@ const fetchData = async () => {
       optSchData =
         optFetchedData.genSchedules[selectedGeneratorsList[genInd].id];
 
-      let onBarDcfetchedData: SchRespObj = await getSchData(
-        selectedGeneratorsList[genInd].id,
-        "onbar",
-        0,
-        startDateValue,
-        endDateValue
-      );
-      onBarDcData =
-        onBarDcfetchedData.genSchedules[selectedGeneratorsList[genInd].id];
-
-      //checking request came for all generators or single generator
       if (selectedGeneratorsList[genInd].id == 0) {
-        //calculating tmdata in case of all generator call
-        tmData = await calTmAllGenApi(startDateValue, endDateValue);
+        costRedData = await calCostRedForAllGen(startDateValue, endDateValue);
       } else {
-        tmData = await calTmSingleGenApi(
-          onBarDcData,
+        costRedData = await calCostRedForSingleGen(
+          optSchData,
+          schData,
           selectedGeneratorsList[genInd].id
         );
       }
 
-      let schVsOptPlotData: PlotData = {
-        title: `${selectedGeneratorsList[genInd].name} Schedule Vs Optimal `,
+      let costReduPlotData: PlotData = {
+        title: `${selectedGeneratorsList[genInd].name} Cost Reduction `,
         traces: [],
       };
 
       let schDataTrace: PlotTrace = {
-        name: "Schedule",
+        name: "Cost Reduction",
         line: {
           width: 4,
         },
-        data: schData,
+        data: costRedData,
         fill: "tozeroy",
       };
-      schVsOptPlotData.traces.push(schDataTrace);
+      costReduPlotData.traces.push(schDataTrace);
 
-      let optSchTrace: PlotTrace = {
-        name: "Optimal-Schedule",
-        line: {
-          width: 4,
-        },
-        data: optSchData,
-        fill: "tozeroy",
-      };
-      schVsOptPlotData.traces.push(optSchTrace);
+      let totalCostRed = 0;
+      costRedData.forEach((val, ind) => {
+        totalCostRed = totalCostRed + val.schVal;
+      });
+      //showing total cost reduction
+      let totalCostredDIv = document.getElementById(
+        `${selectedGeneratorsList[genInd].name}_costRedSum`
+      ) as HTMLDivElement;
+      totalCostredDIv.innerHTML = `Total Cost Reduction for ${
+        selectedGeneratorsList[genInd].name
+      } is ${Math.round(totalCostRed)} Rs `;
 
-      let onBarDcTrace: PlotTrace = {
-        name: "Pmax",
-        line: {
-          width: 4,
-        },
-        data: onBarDcData,
-        fill: "tozeroy",
-        visible: "legendonly",
-      };
-      schVsOptPlotData.traces.push(onBarDcTrace);
-
-      let tmTrace: PlotTrace = {
-        name: "Pmin",
-        line: {
-          width: 4,
-        },
-        data: tmData,
-        fill: "tozeroy",
-        visible: "legendonly",
-      };
-
-      schVsOptPlotData.traces.push(tmTrace);
-
+      //setting plot traces
       setPlotTraces(
-        `${selectedGeneratorsList[genInd].name}_schVsOpt`,
-        schVsOptPlotData
+        `${selectedGeneratorsList[genInd].name}_costRed`,
+        costReduPlotData
       );
 
-      //now plotting for  up and down reserve
-      let upResData = calculateReserve(onBarDcData, schData);
-      let downResData = calculateReserve(schData, tmData);
+      //now plotting for  schedule cost and optimal cost
+      if (selectedGeneratorsList[genInd].id == 0) {
+        normalCost = await calCostForAllGen(
+          startDateValue,
+          endDateValue,
+          "sch"
+        );
+        optCost = await calCostForAllGen(startDateValue, endDateValue, "opt");
+      } else {
+        normalCost = await calCostForSingleGen(
+          schData,
+          selectedGeneratorsList[genInd].id
+        );
+        optCost = await calCostForSingleGen(
+          optSchData,
+          selectedGeneratorsList[genInd].id
+        );
+      }
 
-      let upDownResPlotData: PlotData = {
-        title: `${selectedGeneratorsList[genInd].name} Up Vs Down Reserve `,
+      let costPlotData: PlotData = {
+        title: `${selectedGeneratorsList[genInd].name} Schedule Vs Optimal Cost  `,
         traces: [],
       };
-      let upResTrace: PlotTrace = {
-        name: "UpRes",
+
+      let normalCostTrace: PlotTrace = {
+        name: "Normal Cost",
         line: {
           width: 4,
         },
-        data: upResData,
+        data: normalCost,
         fill: "tozeroy",
       };
-      upDownResPlotData.traces.push(upResTrace);
+      costPlotData.traces.push(normalCostTrace);
 
-      let downResTrace: PlotTrace = {
-        name: "DownRes",
+      let optCostTrace: PlotTrace = {
+        name: "Optimal Cost",
         line: {
           width: 4,
         },
-        data: downResData,
+        data: optCost,
         fill: "tozeroy",
       };
-      upDownResPlotData.traces.push(downResTrace);
+      costPlotData.traces.push(optCostTrace);
 
+      //setting plot traces
       setPlotTraces(
-        `${selectedGeneratorsList[genInd].name}_upVsdwnRes`,
-        upDownResPlotData
+        `${selectedGeneratorsList[genInd].name}_schVsOptCost`,
+        costPlotData
       );
     }
   }

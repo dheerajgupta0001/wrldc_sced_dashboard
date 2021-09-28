@@ -11,6 +11,10 @@ module.exports = {
             "babel-polyfill",
             path.resolve(__dirname, "src/ScheduleOptimalPage/schVsOptPgIndex.ts"),
         ],
+        costsPgIndex: [
+            "babel-polyfill",
+            path.resolve(__dirname, "src/CostsPage/costsPgIndex.ts"),
+        ],
     },
 
     output: {
