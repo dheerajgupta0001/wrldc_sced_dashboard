@@ -1,0 +1,35 @@
+﻿#errorDiv {
+    color: #dc3545;
+}
+
+label {
+    color: #0062cc;
+    font-weight: 500;
+}
+
+input {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+    border-radius: 10px;
+}
+
+.choices__input {
+    border-radius: 25px;
+    border: 2px solid #73ad21;
+    padding: 2px;
+    /*height: 40px;*/
+}
+
+.choices__inner {
+    border-radius: 25px;
+    /* height: 70px;*/
+}
+
+.hrStyle {
+    height: 10px;
+    border: 0;
+    box-shadow: 0 10px 10px -10px #8c8b8b inset;
+}

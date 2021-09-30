@@ -18,6 +18,13 @@ module.exports = {
     summaryPgIndex: [
       "babel-polyfill",
       path.resolve(__dirname, "src/SummaryPage/summaryPgIndex.ts"),
+        ],
+    scedStackedBarPgIndex: [
+        "babel-polyfill",
+        path.resolve(
+            __dirname,
+            "src/ScedStackedBarPage/scedStackedBarPgIndex.ts"
+        ),
     ],
   },
 
