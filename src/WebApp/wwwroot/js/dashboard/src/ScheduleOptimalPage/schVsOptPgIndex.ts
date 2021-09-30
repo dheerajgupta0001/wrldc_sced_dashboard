@@ -56,8 +56,7 @@ const fetchData = async () => {
   ).value;
   let endDateValue = (document.getElementById("endDate") as HTMLInputElement)
     .value;
-  startDateValue = startDateValue.replace(/-/g, "_") + "_00_00_00";
-  endDateValue = endDateValue.replace(/-/g, "_") + "_23_59_59";
+  
   const generatorsOptions = (
     document.getElementById("generators") as HTMLSelectElement
   ).options;
@@ -83,8 +82,10 @@ const fetchData = async () => {
     errorDiv.innerHTML =
       "<b> Ooops !! End Date should be greater or Equal to Start Date </b>";
   } else {
-    //if reached this ,means no validation error ,emptying error div
-    errorDiv.innerHTML = "";
+    //if reached this ,means no validation error ,emptying error div and making start date and end date in desired format
+      errorDiv.innerHTML = "";
+      startDateValue = startDateValue.replace(/-/g, "_") + "_00_00_00";
+      endDateValue = endDateValue.replace(/-/g, "_") + "_23_59_59";
 
     //adding schVsOpt div and upVsDwnReserve div for each selected generators
     selectedGeneratorsList.forEach((value: SelectedGenObj, ind) => {

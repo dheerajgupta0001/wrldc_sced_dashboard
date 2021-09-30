@@ -91,7 +91,7 @@ export const setPlotTraces = (divId: string, plotData: PlotData) => {
       mode: "lines",
       name: trace.name,
       width: 10,
-      hovertemplate: "(%{x}" + ", %{y:.0f}Mw)",
+      hovertemplate: "(%{x}" + ", %{y:.0f}Rs)",
     };
     if (trace.line != null) {
       traceObj["line"] = trace.line;

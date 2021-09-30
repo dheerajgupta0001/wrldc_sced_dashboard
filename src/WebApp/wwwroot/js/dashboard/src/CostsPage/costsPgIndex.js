@@ -48,8 +48,6 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
     let startDateValue = document.getElementById("startDate").value;
     let endDateValue = document.getElementById("endDate")
         .value;
-    startDateValue = startDateValue.replace(/-/g, "_") + "_00_00_00";
-    endDateValue = endDateValue.replace(/-/g, "_") + "_23_59_59";
     const generatorsOptions = document.getElementById("generators").options;
     // storing user selected generators from dropdown in List
     let selectedGeneratorsList = [];
@@ -74,8 +72,10 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
             "<b> Ooops !! End Date should be greater or Equal to Start Date </b>";
     }
     else {
-        //if reached this ,means no validation error ,emptying error div
+        //if reached this ,means no validation error ,emptying error div and making start date and end date in desired format
         errorDiv.innerHTML = "";
+        startDateValue = startDateValue.replace(/-/g, "_") + "_00_00_00";
+        endDateValue = endDateValue.replace(/-/g, "_") + "_23_59_59";
         //adding schVsOpt div and upVsDwnReserve div for each selected generators
         selectedGeneratorsList.forEach((value, ind) => {
             // div for  cost reduction sum showing
