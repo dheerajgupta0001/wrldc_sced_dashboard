@@ -51,4 +51,3 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
 });
-//# sourceMappingURL=monitorPgIndex.js.map

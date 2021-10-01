@@ -70,4 +70,3 @@ export const calCostForSingleGen = (schData, currGenInd) => __awaiter(void 0, vo
     });
     return costData;
 });
-//# sourceMappingURL=calculateCost.js.map

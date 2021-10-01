@@ -9,4 +9,3 @@ export const toDateObj = (timestampStr) => {
     let newTimestamp = new Date(year, month - 1, day, hour, minute, second);
     return newTimestamp;
 };
-//# sourceMappingURL=timeUtils.js.map

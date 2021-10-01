@@ -11,6 +11,7 @@ export const getPlotXYArrays = (measData) => {
 };
 export const setPlotTraces = (divId, plotData) => {
     let traceData = [];
+    // for only bar plots
     const layout = {
         title: {
             text: plotData.title,
@@ -23,16 +24,15 @@ export const setPlotTraces = (divId, plotData) => {
         showlegend: true,
         legend: {
             orientation: "h",
-            y: -0.2,
+            y: -0.3,
             x: 0.1,
             font: {
                 family: "sans-serif",
                 size: 15,
             },
         },
-        autosize: true,
-        height: 600,
-        width: 1500,
+        height: 700,
+        width: 1400,
         xaxis: {
             showgrid: false,
             zeroline: true,
@@ -47,7 +47,7 @@ export const setPlotTraces = (divId, plotData) => {
             tickangle: 283,
         },
         yaxis: {
-            title: "MW ",
+            title: plotData.yAxisTitle,
             showgrid: true,
             zeroline: true,
             showspikes: true,
@@ -58,6 +58,10 @@ export const setPlotTraces = (divId, plotData) => {
             tickformat: "digits",
         },
     };
+    //for only bar plots
+    if (plotData.barmode != null) {
+        layout["barmode"] = plotData.barmode;
+    }
     for (var traceIter = 0; traceIter < plotData.traces.length; traceIter++) {
         const trace = plotData.traces[traceIter];
         const xyData = getPlotXYArrays(trace.data);
@@ -65,11 +69,9 @@ export const setPlotTraces = (divId, plotData) => {
         let traceObj = {
             x: xyData.timestamps,
             y: xyData.vals,
-            type: "scatter",
-            mode: "lines",
+            type: trace.type,
             name: trace.name,
-            width: 10,
-            hovertemplate: "(%{x}" + ", %{y:.0f}Mw)",
+            hovertemplate: `(%{x}" + ", %{y:.0f} ${trace.hoverYaxisDisplay})`,
         };
         if (trace.line != null) {
             traceObj["line"] = trace.line;
@@ -80,8 +82,10 @@ export const setPlotTraces = (divId, plotData) => {
         if (trace.fill != null) {
             traceObj["fill"] = trace.fill;
         }
+        if (trace.mode != null) {
+            traceObj["mode"] = trace.mode;
+        }
         traceData.push(traceObj);
     }
     Plotly.newPlot(divId, traceData, layout);
 };
-//# sourceMappingURL=plotUtils.js.map

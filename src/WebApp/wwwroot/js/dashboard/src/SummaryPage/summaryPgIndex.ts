@@ -38,6 +38,9 @@ const fetchData = async () => {
     //to display error msg
     const errorDiv = document.getElementById("errorDiv") as HTMLDivElement;
 
+    //to display spinner 
+    const spinnerDiv = document.getElementById("spinner") as HTMLDivElement;
+
     //get user inputs
     let startDateValue = (
         document.getElementById("startDate") as HTMLInputElement
@@ -59,22 +62,33 @@ const fetchData = async () => {
         startDateValue = startDateValue.replace(/-/g, "_") + "_00_00_00";
         endDateValue = endDateValue.replace(/-/g, "_") + "_23_59_59";
 
+        //adding spinner class to spinner div
+        spinnerDiv.classList.add("loader")
+
         //for storing summary page row for each station.
         let summaryPgAllRows: SummaryPgRow[] = new Array();
 
         // get all generators
         const allGenData: AllGenRespObj[] = await getAllGenData();
-
-        for (const singleGenObj of allGenData) {
-            const genSummary: SummaryPgRow = await calculateSummary(
-                startDateValue,
-                endDateValue,
-                singleGenObj
-            );
-            summaryPgAllRows.push(genSummary);
+        try {
+            for (const singleGenObj of allGenData) {
+                const genSummary: SummaryPgRow = await calculateSummary(
+                    startDateValue,
+                    endDateValue,
+                    singleGenObj
+                );
+                summaryPgAllRows.push(genSummary);
+            }
+            //for loop ends means nor error remove spinning class to spinning div
+            // removing spinner class to spinner div
+            spinnerDiv.classList.remove("loader")
+        }
+        catch (err) {
+            errorDiv.innerHTML = "<b>Oops !!! Data Fetch Unsuccessful For Selected Date. Please Try Again</b>"
+            // removing spinner class to spinner div
+            spinnerDiv.classList.remove("loader")
         }
         
-
         //now drawing table from summaryPgAllRows
         $(`#summaryTbl`).DataTable().destroy();
         $(`#summaryTbl`).DataTable({

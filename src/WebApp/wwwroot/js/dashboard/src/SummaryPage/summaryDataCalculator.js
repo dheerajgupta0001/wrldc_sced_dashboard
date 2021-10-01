@@ -54,4 +54,3 @@ export const calculateSummary = (startDateValue, endDateValue, genObj) => __awai
     //console.log(summaryPgRow);
     return summaryPgRow;
 });
-//# sourceMappingURL=summaryDataCalculator.js.map

@@ -83,4 +83,3 @@ export const calTmSingleGenApi = (onBarDcData, genId) => __awaiter(void 0, void 
     });
     return tmData;
 });
-//# sourceMappingURL=techMinCalculator.js.map

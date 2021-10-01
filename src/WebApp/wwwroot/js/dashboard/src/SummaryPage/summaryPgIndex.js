@@ -18,6 +18,8 @@ window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
 const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
     //to display error msg
     const errorDiv = document.getElementById("errorDiv");
+    //to display spinner 
+    const spinnerDiv = document.getElementById("spinner");
     //get user inputs
     let startDateValue = document.getElementById("startDate").value;
     let endDateValue = document.getElementById("endDate")
@@ -37,13 +39,25 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
         errorDiv.innerHTML = "";
         startDateValue = startDateValue.replace(/-/g, "_") + "_00_00_00";
         endDateValue = endDateValue.replace(/-/g, "_") + "_23_59_59";
+        //adding spinner class to spinner div
+        spinnerDiv.classList.add("loader");
         //for storing summary page row for each station.
         let summaryPgAllRows = new Array();
         // get all generators
         const allGenData = yield getAllGenData();
-        for (const singleGenObj of allGenData) {
-            const genSummary = yield calculateSummary(startDateValue, endDateValue, singleGenObj);
-            summaryPgAllRows.push(genSummary);
+        try {
+            for (const singleGenObj of allGenData) {
+                const genSummary = yield calculateSummary(startDateValue, endDateValue, singleGenObj);
+                summaryPgAllRows.push(genSummary);
+            }
+            //for loop ends means nor error remove spinning class to spinning div
+            // removing spinner class to spinner div
+            spinnerDiv.classList.remove("loader");
+        }
+        catch (err) {
+            errorDiv.innerHTML = "<b>Oops !!! Data Fetch Unsuccessful For Selected Date. Please Try Again</b>";
+            // removing spinner class to spinner div
+            spinnerDiv.classList.remove("loader");
         }
         //now drawing table from summaryPgAllRows
         $(`#summaryTbl`).DataTable().destroy();
@@ -88,4 +102,3 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
 });
-//# sourceMappingURL=summaryPgIndex.js.map

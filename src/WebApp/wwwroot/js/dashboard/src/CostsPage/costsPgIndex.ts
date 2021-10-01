@@ -2,7 +2,7 @@
 declare var Choices: any;
 import { getAllGenData, getSchData } from "../fetchDataApi";
 import { AllGenRespObj, SchRespObj, SchTsRowObj } from "../respObj";
-import { PlotData, PlotTrace, setPlotTraces } from "./costPlotUtils";
+import { PlotData, PlotTrace, setPlotTraces } from "../plotUtils";
 import {
   calCostRedForAllGen,
   calCostRedForSingleGen,
@@ -45,7 +45,9 @@ window.onload = async () => {
 
 const fetchData = async () => {
   //to display error msg
-  const errorDiv = document.getElementById("errorDiv") as HTMLDivElement;
+    const errorDiv = document.getElementById("errorDiv") as HTMLDivElement;
+    //to display spinner 
+    const spinnerDiv = document.getElementById("spinner") as HTMLDivElement;
 
   // selecting plotswrapper div to generate div dynamically
   let plotsWrapperDiv = <HTMLDivElement>document.getElementById("plotsWrapper");
@@ -90,6 +92,9 @@ const fetchData = async () => {
       startDateValue = startDateValue.replace(/-/g, "_") + "_00_00_00";
       endDateValue = endDateValue.replace(/-/g, "_") + "_23_59_59";
 
+      //adding spinner class to spinner div
+      spinnerDiv.classList.add("loader")
+
     //adding schVsOpt div and upVsDwnReserve div for each selected generators
     selectedGeneratorsList.forEach((value: SelectedGenObj, ind) => {
 
@@ -119,124 +124,149 @@ const fetchData = async () => {
       hrDiv2.className = "hrStyle";
       plotsWrapperDiv.appendChild(hrDiv2);
     });
-    for (let genInd = 0; genInd < selectedGeneratorsList.length; genInd++) {
-      let schData: SchTsRowObj[] = [];
-      let optSchData: SchTsRowObj[] = [];
-      let costRedData: SchTsRowObj[] = [];
-      let normalCost: SchTsRowObj[] = [];
-      let optCost: SchTsRowObj[] = [];
 
-      let schfetchedData: SchRespObj = await getSchData(
-        selectedGeneratorsList[genInd].id,
-        "sch",
-        0,
-        startDateValue,
-        endDateValue
-      );
-      schData = schfetchedData.genSchedules[selectedGeneratorsList[genInd].id];
+      try {
+          for (let genInd = 0; genInd < selectedGeneratorsList.length; genInd++) {
+              let schData: SchTsRowObj[] = [];
+              let optSchData: SchTsRowObj[] = [];
+              let costRedData: SchTsRowObj[] = [];
+              let normalCost: SchTsRowObj[] = [];
+              let optCost: SchTsRowObj[] = [];
 
-      let optFetchedData: SchRespObj = await getSchData(
-        selectedGeneratorsList[genInd].id,
-        "opt",
-        0,
-        startDateValue,
-        endDateValue
-      );
-      optSchData =
-        optFetchedData.genSchedules[selectedGeneratorsList[genInd].id];
+              let schfetchedData: SchRespObj = await getSchData(
+                  selectedGeneratorsList[genInd].id,
+                  "sch",
+                  0,
+                  startDateValue,
+                  endDateValue
+              );
+              schData = schfetchedData.genSchedules[selectedGeneratorsList[genInd].id];
 
-      if (selectedGeneratorsList[genInd].id == 0) {
-        costRedData = await calCostRedForAllGen(startDateValue, endDateValue);
-      } else {
-        costRedData = await calCostRedForSingleGen(
-          optSchData,
-          schData,
-          selectedGeneratorsList[genInd].id
-        );
+              let optFetchedData: SchRespObj = await getSchData(
+                  selectedGeneratorsList[genInd].id,
+                  "opt",
+                  0,
+                  startDateValue,
+                  endDateValue
+              );
+              optSchData =
+                  optFetchedData.genSchedules[selectedGeneratorsList[genInd].id];
+
+              if (selectedGeneratorsList[genInd].id == 0) {
+                  costRedData = await calCostRedForAllGen(startDateValue, endDateValue);
+              } else {
+                  costRedData = await calCostRedForSingleGen(
+                      optSchData,
+                      schData,
+                      selectedGeneratorsList[genInd].id
+                  );
+              }
+
+              let costReduPlotData: PlotData = {
+                  title: `${selectedGeneratorsList[genInd].name} Cost Reduction `,
+                  traces: [],
+                  yAxisTitle: "Values(in Rs)",
+
+              };
+
+              let schDataTrace: PlotTrace = {
+                  name: "Cost Reduction",
+                  data: costRedData,
+                  type: "scatter",
+                  hoverYaxisDisplay: "Rs",
+                  line: {
+                      width: 4,
+                  },
+                  fill: "tozeroy",
+              };
+              costReduPlotData.traces.push(schDataTrace);
+
+              let totalCostRed = 0;
+              costRedData.forEach((val, ind) => {
+                  totalCostRed = totalCostRed + val.schVal;
+              });
+              //showing total cost reduction
+              let totalCostredDIv = document.getElementById(
+                  `${selectedGeneratorsList[genInd].name}_costRedSum`
+              ) as HTMLDivElement;
+              totalCostredDIv.innerHTML = `Total Cost Reduction for ${selectedGeneratorsList[genInd].name
+                  } is ${Math.round(totalCostRed)} Rs `;
+
+              //setting plot traces
+              setPlotTraces(
+                  `${selectedGeneratorsList[genInd].name}_costRed`,
+                  costReduPlotData
+              );
+
+              //now plotting for  schedule cost and optimal cost
+              if (selectedGeneratorsList[genInd].id == 0) {
+                  normalCost = await calCostForAllGen(
+                      startDateValue,
+                      endDateValue,
+                      "sch"
+                  );
+                  optCost = await calCostForAllGen(startDateValue, endDateValue, "opt");
+              }
+              else {
+                  normalCost = await calCostForSingleGen(
+                      schData,
+                      selectedGeneratorsList[genInd].id
+                  );
+                  optCost = await calCostForSingleGen(
+                      optSchData,
+                      selectedGeneratorsList[genInd].id
+                  );
+              }
+
+              let costPlotData: PlotData = {
+                  title: `${selectedGeneratorsList[genInd].name} Schedule Vs Optimal Cost  `,
+                  traces: [],
+                  yAxisTitle: "Values(in Rs)",
+
+              };
+
+              let normalCostTrace: PlotTrace = {
+                  name: "Normal Cost",
+                  data: normalCost,
+                  type: "scatter",
+                  hoverYaxisDisplay: "Rs",
+                  line: {
+                      width: 4,
+                  },
+
+                  fill: "tozeroy",
+              };
+              costPlotData.traces.push(normalCostTrace);
+
+              let optCostTrace: PlotTrace = {
+                  name: "Optimal Cost",
+                  type: "scatter",
+                  data: optCost,
+                  hoverYaxisDisplay: "Rs",
+                  line: {
+                      width: 4,
+                  },
+                  fill: "tozeroy",
+              };
+              costPlotData.traces.push(optCostTrace);
+
+              //setting plot traces
+              setPlotTraces(
+                  `${selectedGeneratorsList[genInd].name}_schVsOptCost`,
+                  costPlotData
+              );
+          }
+
+          //for loop ends means nor error remove spinning class to spinning div
+          // removing spinner class to spinner div
+          spinnerDiv.classList.remove("loader")
+
       }
-
-      let costReduPlotData: PlotData = {
-        title: `${selectedGeneratorsList[genInd].name} Cost Reduction `,
-        traces: [],
-      };
-
-      let schDataTrace: PlotTrace = {
-        name: "Cost Reduction",
-        line: {
-          width: 4,
-        },
-        data: costRedData,
-        fill: "tozeroy",
-      };
-      costReduPlotData.traces.push(schDataTrace);
-
-      let totalCostRed = 0;
-      costRedData.forEach((val, ind) => {
-        totalCostRed = totalCostRed + val.schVal;
-      });
-      //showing total cost reduction
-      let totalCostredDIv = document.getElementById(
-        `${selectedGeneratorsList[genInd].name}_costRedSum`
-      ) as HTMLDivElement;
-      totalCostredDIv.innerHTML = `Total Cost Reduction for ${
-        selectedGeneratorsList[genInd].name
-      } is ${Math.round(totalCostRed)} Rs `;
-
-      //setting plot traces
-      setPlotTraces(
-        `${selectedGeneratorsList[genInd].name}_costRed`,
-        costReduPlotData
-      );
-
-      //now plotting for  schedule cost and optimal cost
-      if (selectedGeneratorsList[genInd].id == 0) {
-        normalCost = await calCostForAllGen(
-          startDateValue,
-          endDateValue,
-          "sch"
-        );
-        optCost = await calCostForAllGen(startDateValue, endDateValue, "opt");
-      } else {
-        normalCost = await calCostForSingleGen(
-          schData,
-          selectedGeneratorsList[genInd].id
-        );
-        optCost = await calCostForSingleGen(
-          optSchData,
-          selectedGeneratorsList[genInd].id
-        );
+      catch (err) {
+          errorDiv.innerHTML = "<b>Oops !!! Data Fetch Unsuccessful For Selected Date. Please Try Again</b>"
+          // removing spinner class to spinner div
+          spinnerDiv.classList.remove("loader")
       }
-
-      let costPlotData: PlotData = {
-        title: `${selectedGeneratorsList[genInd].name} Schedule Vs Optimal Cost  `,
-        traces: [],
-      };
-
-      let normalCostTrace: PlotTrace = {
-        name: "Normal Cost",
-        line: {
-          width: 4,
-        },
-        data: normalCost,
-        fill: "tozeroy",
-      };
-      costPlotData.traces.push(normalCostTrace);
-
-      let optCostTrace: PlotTrace = {
-        name: "Optimal Cost",
-        line: {
-          width: 4,
-        },
-        data: optCost,
-        fill: "tozeroy",
-      };
-      costPlotData.traces.push(optCostTrace);
-
-      //setting plot traces
-      setPlotTraces(
-        `${selectedGeneratorsList[genInd].name}_schVsOptCost`,
-        costPlotData
-      );
-    }
+    
   }
 };

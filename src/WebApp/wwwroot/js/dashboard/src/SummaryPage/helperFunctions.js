@@ -121,4 +121,3 @@ export const calculateScedData = (optSchData, schData, genObj) => {
 export function roundToTwo(num) {
     return Math.round(num * 10) / 10;
 }
-//# sourceMappingURL=helperFunctions.js.map

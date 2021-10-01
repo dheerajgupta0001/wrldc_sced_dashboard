@@ -33,4 +33,3 @@ export const getSchData = (genId, schType, revNo, startDate, endDate) => __await
         return null;
     }
 });
-//# sourceMappingURL=fetchDataApi.js.map

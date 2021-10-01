@@ -5,15 +5,21 @@ import { toDateObj } from "./timeUtils";
 
 export interface PlotTrace {
   name: string;
-  data: SchTsRowObj[];
+    data: SchTsRowObj[];
+    type: string;
+    hoverYaxisDisplay: string
   line?: { color?: string; width?: number };
   visible?: string | boolean;
-  fill: string;
+    fill?: string;
+    mode?: string;
+
 }
 
 export interface PlotData {
   title: string;
-  traces: PlotTrace[];
+    traces: PlotTrace[];
+    yAxisTitle: string
+    barmode?: string
 }
 
 export const getPlotXYArrays = (
@@ -29,7 +35,9 @@ export const getPlotXYArrays = (
 };
 
 export const setPlotTraces = (divId: string, plotData: PlotData) => {
-  let traceData = [];
+    let traceData = [];
+    // for only bar plots
+    
   const layout = {
     title: {
       text: plotData.title,
@@ -42,7 +50,7 @@ export const setPlotTraces = (divId: string, plotData: PlotData) => {
     showlegend: true,
     legend: {
       orientation: "h",
-      y: -0.2,
+      y: -0.3,
       x: 0.1,
       font: {
         family: "sans-serif",
@@ -50,9 +58,9 @@ export const setPlotTraces = (divId: string, plotData: PlotData) => {
       },
     },
 
-    autosize: true,
-    height: 600,
-    width: 1500,
+    
+    height: 700,
+    width: 1400,
     xaxis: {
       showgrid: false,
       zeroline: true,
@@ -67,7 +75,7 @@ export const setPlotTraces = (divId: string, plotData: PlotData) => {
       tickangle: 283,
     },
     yaxis: {
-      title: "MW ",
+          title: plotData.yAxisTitle,
       showgrid: true,
       zeroline: true,
       showspikes: true,
@@ -77,7 +85,12 @@ export const setPlotTraces = (divId: string, plotData: PlotData) => {
       tickfont: { color: "#000", size: 18 },
       tickformat: "digits",
     },
-  };
+    };
+
+    //for only bar plots
+    if (plotData.barmode != null) {
+        layout["barmode"] = plotData.barmode
+    }
 
   for (var traceIter = 0; traceIter < plotData.traces.length; traceIter++) {
     const trace = plotData.traces[traceIter];
@@ -87,11 +100,9 @@ export const setPlotTraces = (divId: string, plotData: PlotData) => {
     let traceObj = {
       x: xyData.timestamps,
       y: xyData.vals,
-      type: "scatter",
-      mode: "lines",
+      type: trace.type,
       name: trace.name,
-      width: 10,
-      hovertemplate: "(%{x}" + ", %{y:.0f}Mw)",
+      hovertemplate: `(%{x}, %{y:.0f} ${trace.hoverYaxisDisplay})`,
     };
     if (trace.line != null) {
       traceObj["line"] = trace.line;
@@ -101,9 +112,11 @@ export const setPlotTraces = (divId: string, plotData: PlotData) => {
     }
     if (trace.fill != null) {
       traceObj["fill"] = trace.fill;
-    }
+      }
+      if (trace.mode != null) {
+          traceObj["mode"] = trace.mode;
+      }
     traceData.push(traceObj);
   }
-
   Plotly.newPlot(divId, traceData, layout);
 };

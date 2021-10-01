@@ -43,4 +43,3 @@ export const calTmAllGenApi = (startDateValue, endDateValue) => __awaiter(void 0
     console.log(timestampVal);
     return tmData;
 });
-//# sourceMappingURL=tmCalAllGen.js.map

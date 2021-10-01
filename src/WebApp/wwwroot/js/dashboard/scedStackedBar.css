@@ -6,6 +6,7 @@ label {
     color: #0062cc;
     font-weight: 500;
 }
+
 input {
     display: block;
     width: 100%;
@@ -14,6 +15,7 @@ input {
     box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
     border-radius: 10px;
 }
+
 .choices__input {
     border-radius: 25px;
     border: 2px solid #73ad21;
@@ -23,7 +25,7 @@ input {
 
 .choices__inner {
     border-radius: 25px;
-   /* height: 70px;*/
+    /* height: 70px;*/
 }
 
 .hrStyle {

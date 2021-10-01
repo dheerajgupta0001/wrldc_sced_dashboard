@@ -76,4 +76,3 @@ export const calCostRedForSingleGen = (optSchData, schData, currGenInd) => __awa
     }
     return costRedData;
 });
-//# sourceMappingURL=calculateCostRed.js.map

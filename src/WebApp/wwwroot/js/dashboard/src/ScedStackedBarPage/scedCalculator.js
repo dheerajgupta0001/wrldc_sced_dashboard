@@ -10,4 +10,3 @@ export const calculateScedData = (optSchData, schData) => {
     }
     return scedDataList;
 };
-//# sourceMappingURL=scedCalculator.js.map

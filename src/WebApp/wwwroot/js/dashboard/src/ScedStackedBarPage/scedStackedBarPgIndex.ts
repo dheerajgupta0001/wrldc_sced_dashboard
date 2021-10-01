@@ -2,7 +2,7 @@
 declare var Choices: any;
 import { getAllGenData, getSchData } from "../fetchDataApi";
 import { AllGenRespObj, SchRespObj, SchTsRowObj } from "../respObj";
-import { PlotData, PlotTrace, setPlotTraces } from "./scedStackedBarPlotUtils";
+import { PlotData, PlotTrace, setPlotTraces } from "../plotUtils";
 import { calculateScedData } from "./scedCalculator";
 
 export interface SelectedGenObj {
@@ -41,7 +41,12 @@ window.onload = async () => {
 
 const fetchData = async () => {
   //to display error msg
-  const errorDiv = document.getElementById("errorDiv") as HTMLDivElement;
+    const errorDiv = document.getElementById("errorDiv") as HTMLDivElement;
+  //to display spinner 
+    const spinnerDiv = document.getElementById("spinner") as HTMLDivElement;
+    //clearing any plots present before new request
+    const stackedBarPlotsDiv = document.getElementById("stackedBarPlots") as HTMLDivElement;
+    stackedBarPlotsDiv.innerHTML = "";
 
   //get user inputs
   let startDateValue = (
@@ -79,10 +84,14 @@ const fetchData = async () => {
     errorDiv.innerHTML =
       "<b> Ooops !! End Date should be greater or Equal to Start Date </b>";
   } else {
-    //if reached this ,means no validation error ,emptying error div and making start date and end date in desired format
-    errorDiv.innerHTML = "";
-    startDateValue = startDateValue.replace(/-/g, "_") + "_00_00_00";
-    endDateValue = endDateValue.replace(/-/g, "_") + "_23_59_59";
+    //if reached this ,means no validation error ,emptying error div, and emptying earlier plots and making start date and end date in desired format
+      errorDiv.innerHTML = "";
+      
+      startDateValue = startDateValue.replace(/-/g, "_") + "_00_00_00";
+      endDateValue = endDateValue.replace(/-/g, "_") + "_23_59_59";
+
+    //adding spinner class to spinner div
+    spinnerDiv.classList.add("loader")
 
     let sumSced: SchTsRowObj[] = [];
 
@@ -90,68 +99,88 @@ const fetchData = async () => {
       title: `SCED Comparison From ${startDateValue.substring(
         0,
         10
-      )} to ${endDateValue.substring(0, 10)} `,
-      traces: [],
+      )} To ${endDateValue.substring(0, 10)} `,
+        traces: [],
+        yAxisTitle: "MW",
+        barmode:"relative"
     };
 
-    for (let genInd = 0; genInd < selectedGeneratorsList.length; genInd++) {
-      let schData: SchTsRowObj[] = [];
-      let optSchData: SchTsRowObj[] = [];
 
-      let schfetchedData: SchRespObj = await getSchData(
-        selectedGeneratorsList[genInd].id,
-        "sch",
-        0,
-        startDateValue,
-        endDateValue
-      );
-      schData = schfetchedData.genSchedules[selectedGeneratorsList[genInd].id];
+      try {
+          for (let genInd = 0; genInd < selectedGeneratorsList.length; genInd++) {
+              let schData: SchTsRowObj[] = [];
+              let optSchData: SchTsRowObj[] = [];
 
-      let optFetchedData: SchRespObj = await getSchData(
-        selectedGeneratorsList[genInd].id,
-        "opt",
-        0,
-        startDateValue,
-        endDateValue
-      );
-      optSchData =
-        optFetchedData.genSchedules[selectedGeneratorsList[genInd].id];
+              let schfetchedData: SchRespObj = await getSchData(
+                  selectedGeneratorsList[genInd].id,
+                  "sch",
+                  0,
+                  startDateValue,
+                  endDateValue
+              );
+              schData = schfetchedData.genSchedules[selectedGeneratorsList[genInd].id];
 
-      // for first time loop , initialize sumSced(which store arithmetic sced sum) array
-      if (genInd == 0) {
-        optSchData.forEach((optScheSingleObj, ind) => {
-          sumSced.push({ schTime: optScheSingleObj.schTime, schVal: 0 });
-        });
+
+
+              let optFetchedData: SchRespObj = await getSchData(
+                  selectedGeneratorsList[genInd].id,
+                  "opt",
+                  0,
+                  startDateValue,
+                  endDateValue
+              );
+              optSchData =
+                  optFetchedData.genSchedules[selectedGeneratorsList[genInd].id];
+
+              // for first time loop , initialize sumSced(which store arithmetic sced sum) array
+              if (genInd == 0) {
+                  optSchData.forEach((optScheSingleObj, ind) => {
+                      sumSced.push({ schTime: optScheSingleObj.schTime, schVal: 0 });
+                  });
+              }
+              // calculate sced data for current generator
+              let scedDataList: SchTsRowObj[] = calculateScedData(optSchData, schData);
+
+              // adding sced data to sumsced(which store arithmetic sced sum)
+              scedDataList.forEach((scedSingleOnj, ind) => {
+                  sumSced[ind].schVal = sumSced[ind].schVal + scedSingleOnj.schVal;
+              });
+
+              // adding current generator bar plot trace
+              let scedTrace: PlotTrace = {
+                  name: `${selectedGeneratorsList[genInd].name}`,
+                  data: scedDataList,
+                  type: "bar",
+                  hoverYaxisDisplay: "MW",
+
+              };
+              scedPlotData.traces.push(scedTrace);
+          }
       }
-      // calculate sced data for current generator
-      let scedDataList: SchTsRowObj[] = calculateScedData(optSchData, schData);
+      catch (err) {
+          errorDiv.innerHTML = "<b>Oops !!! Data Fetch Unsuccessful For Selected Date. Please Try Again </b>"
+          // removing spinner class to spinner div
+          spinnerDiv.classList.remove("loader")
+      }
+    
 
-      // adding sced data to sumsced(which store arithmetic sced sum)
-      scedDataList.forEach((scedSingleOnj, ind) => {
-        sumSced[ind].schVal = sumSced[ind].schVal + scedSingleOnj.schVal;
-      });
-
-      // adding current generator bar plot trace
-      let scedTrace: PlotTrace = {
-        name: `${selectedGeneratorsList[genInd].name}`,
-        data: scedDataList,
-        type: "bar",
-      };
-      scedPlotData.traces.push(scedTrace);
-    }
-
-    // adding current generator bar plot trace
+    // adding sum sced line trace
     let scedSumTrace: PlotTrace = {
       name: `Sum-SCED`,
       data: sumSced,
       type: "lines",
       line: {
-          width: 4,
-          color: "#979797",
-      },
-      //mode: "lines+markers",
-    };
+          width: 3,
+          color: "#696969",
+        },
+        hoverYaxisDisplay:"MW"
+      };
+
     scedPlotData.traces.push(scedSumTrace);
+
+    // removing spinner class to spinner div
+    spinnerDiv.classList.remove("loader")
+
     setPlotTraces("stackedBarPlots", scedPlotData);
   }
 };
