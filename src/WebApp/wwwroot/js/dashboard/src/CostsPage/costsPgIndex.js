@@ -11,6 +11,7 @@ import { getAllGenData, getSchData } from "../fetchDataApi";
 import { setPlotTraces } from "../plotUtils";
 import { calCostRedForAllGen, calCostRedForSingleGen, } from "./calculateCostRed";
 import { calCostForAllGen, calCostForSingleGen } from "./calculateCost";
+import { roundToThree } from "../SummaryPage/helperFunctions";
 let intervalID = null;
 window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
     //dynamically populating generator dropdown using api
@@ -64,17 +65,21 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
     }
     //validation checks, and displaying msg in error div
     if (startDateValue === "" || endDateValue === "") {
+        errorDiv.classList.add("mt-4", "mb-4", "alert", "alert-danger");
         errorDiv.innerHTML = "<b> Please Enter a Valid Start Date/End Date</b>";
     }
     else if (selectedGeneratorsList.length == 0) {
+        errorDiv.classList.add("mt-4", "mb-4", "alert", "alert-danger");
         errorDiv.innerHTML = "<b> Please Select Generators From Dropdown</b>";
     }
     else if (startDateValue > endDateValue) {
+        errorDiv.classList.add("mt-4", "mb-4", "alert", "alert-danger");
         errorDiv.innerHTML =
             "<b> Ooops !! End Date should be greater or Equal to Start Date </b>";
     }
     else {
         //if reached this ,means no validation error ,emptying error div and making start date and end date in desired format
+        errorDiv.classList.remove("mt-4", "mb-4", "alert", "alert-danger");
         errorDiv.innerHTML = "";
         startDateValue = startDateValue.replace(/-/g, "_") + "_00_00_00";
         endDateValue = endDateValue.replace(/-/g, "_") + "_23_59_59";
@@ -144,7 +149,7 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
                 });
                 //showing total cost reduction
                 let totalCostredDIv = document.getElementById(`${selectedGeneratorsList[genInd].name}_costRedSum`);
-                totalCostredDIv.innerHTML = `Total Cost Reduction for ${selectedGeneratorsList[genInd].name} is ${Math.round(totalCostRed)} Rs `;
+                totalCostredDIv.innerHTML = `Total Cost Reduction for ${selectedGeneratorsList[genInd].name} is ${roundToThree(totalCostRed / 100000)} Lakhs `;
                 //setting plot traces
                 setPlotTraces(`${selectedGeneratorsList[genInd].name}_costRed`, costReduPlotData);
                 //now plotting for  schedule cost and optimal cost
@@ -191,6 +196,7 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
             spinnerDiv.classList.remove("loader");
         }
         catch (err) {
+            errorDiv.classList.add("mt-4", "mb-4", "alert", "alert-danger");
             errorDiv.innerHTML = "<b>Oops !!! Data Fetch Unsuccessful For Selected Date. Please Try Again</b>";
             // removing spinner class to spinner div
             spinnerDiv.classList.remove("loader");

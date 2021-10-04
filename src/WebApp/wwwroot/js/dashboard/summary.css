@@ -70,7 +70,7 @@ input.dt-button {
 tfoot tr th {
     color: #dc3545;
     background: white;
-    font-size: 20px;
+    font-size: 12px;
     font-weight: bolder;
     animation: blinker 1s linear infinite;
 }

@@ -121,3 +121,6 @@ export const calculateScedData = (optSchData, schData, genObj) => {
 export function roundToTwo(num) {
     return Math.round(num * 10) / 10;
 }
+export function roundToThree(num) {
+    return Math.round(num * 1000) / 1000;
+}

@@ -8,7 +8,7 @@ import {
   calCostRedForSingleGen,
 } from "./calculateCostRed";
 import { calCostForAllGen, calCostForSingleGen } from "./calculateCost";
-
+import { roundToThree } from "../SummaryPage/helperFunctions"
 export interface SelectedGenObj {
   name: string;
   id: number;
@@ -194,7 +194,7 @@ const fetchData = async () => {
                   `${selectedGeneratorsList[genInd].name}_costRedSum`
               ) as HTMLDivElement;
               totalCostredDIv.innerHTML = `Total Cost Reduction for ${selectedGeneratorsList[genInd].name
-                  } is ${Math.round(totalCostRed)} Rs `;
+                  } is ${roundToThree(totalCostRed/100000)} Lakhs `;
 
               //setting plot traces
               setPlotTraces(

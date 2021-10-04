@@ -59,8 +59,7 @@ export const setPlotTraces = (divId: string, plotData: PlotData) => {
     },
 
     
-    height: 700,
-    width: 1400,
+    autosize:true,
     xaxis: {
       showgrid: false,
       zeroline: true,

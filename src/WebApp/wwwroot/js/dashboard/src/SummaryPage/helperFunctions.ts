@@ -149,3 +149,7 @@ export const calculateScedData = (
 export function roundToTwo(num: number) {
     return Math.round(num * 10) / 10
 }
+
+export function roundToThree(num: number) {
+    return Math.round(num * 1000) / 1000
+}
