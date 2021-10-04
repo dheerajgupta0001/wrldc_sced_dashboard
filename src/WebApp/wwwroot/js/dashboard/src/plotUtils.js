@@ -71,7 +71,7 @@ export const setPlotTraces = (divId, plotData) => {
             y: xyData.vals,
             type: trace.type,
             name: trace.name,
-            hovertemplate: `(%{x}" + ", %{y:.0f} ${trace.hoverYaxisDisplay})`,
+            hovertemplate: `(%{x}, %{y:.0f} ${trace.hoverYaxisDisplay})`,
         };
         if (trace.line != null) {
             traceObj["line"] = trace.line;

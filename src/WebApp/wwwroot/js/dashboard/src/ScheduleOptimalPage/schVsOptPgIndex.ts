@@ -77,15 +77,19 @@ const fetchData = async () => {
   }
 
   //validation checks, and displaying msg in error div
-  if (startDateValue === "" || endDateValue === "") {
+    if (startDateValue === "" || endDateValue === "") {
+        errorDiv.classList.add("mt-4", "mb-4", "alert", "alert-danger")
     errorDiv.innerHTML = "<b> Please Enter a Valid Start Date/End Date</b>";
-  } else if (selectedGeneratorsList.length == 0) {
+    } else if (selectedGeneratorsList.length == 0) {
+        errorDiv.classList.add("mt-4", "mb-4", "alert", "alert-danger")
     errorDiv.innerHTML = "<b> Please Select Generators From Dropdown</b>";
-  } else if (startDateValue > endDateValue) {
+    } else if (startDateValue > endDateValue) {
+        errorDiv.classList.add("mt-4", "mb-4", "alert", "alert-danger")
     errorDiv.innerHTML =
       "<b> Ooops !! End Date should be greater or Equal to Start Date </b>";
   } else {
     //if reached this ,means no validation error ,emptying error div and making start date and end date in desired format
+      errorDiv.classList.remove("mt-4", "mb-4", "alert", "alert-danger")
       errorDiv.innerHTML = "";
       startDateValue = startDateValue.replace(/-/g, "_") + "_00_00_00";
       endDateValue = endDateValue.replace(/-/g, "_") + "_23_59_59";
@@ -271,10 +275,11 @@ const fetchData = async () => {
           }
           //for loop ends means nor error remove spinning class to spinning div
           // removing spinner class to spinner div
+
           spinnerDiv.classList.remove("loader")
       }
       catch (err) {
-
+          errorDiv.classList.add("mt-4", "mb-4", "alert", "alert-danger")
           errorDiv.innerHTML = "<b>Oops !!! Data Fetch Unsuccessful For Selected Date. Please Try Again</b>"
           // removing spinner class to spinner div
           spinnerDiv.classList.remove("loader")

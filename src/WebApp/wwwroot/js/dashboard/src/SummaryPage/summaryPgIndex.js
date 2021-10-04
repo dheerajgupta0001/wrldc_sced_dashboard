@@ -26,17 +26,18 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
         .value;
     //validation checks, and displaying msg in error div
     if (startDateValue === "" || endDateValue === "") {
+        errorDiv.classList.add("mt-4", "mb-4", "alert", "alert-danger");
         errorDiv.innerHTML = "<b> Please Enter a Valid Start Date/End Date</b>";
-        console.log("error");
     }
     else if (startDateValue > endDateValue) {
+        errorDiv.classList.add("mt-4", "mb-4", "alert", "alert-danger");
         errorDiv.innerHTML =
             "<b> Ooops !! End Date should be greater or Equal to Start Date </b>";
-        console.log("error-2");
     }
     else {
         //if reached this ,means no validation error ,emptying error div and making start date and end date in desired format
         errorDiv.innerHTML = "";
+        errorDiv.classList.remove("mt-4", "mb-4", "alert", "alert-danger");
         startDateValue = startDateValue.replace(/-/g, "_") + "_00_00_00";
         endDateValue = endDateValue.replace(/-/g, "_") + "_23_59_59";
         //adding spinner class to spinner div
@@ -50,11 +51,12 @@ const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
                 const genSummary = yield calculateSummary(startDateValue, endDateValue, singleGenObj);
                 summaryPgAllRows.push(genSummary);
             }
-            //for loop ends means nor error remove spinning class to spinning div
+            // for loop ends means nor error remove spinning class to spinning div
             // removing spinner class to spinner div
             spinnerDiv.classList.remove("loader");
         }
         catch (err) {
+            errorDiv.classList.add("mt-4", "mb-4", "alert", "alert-danger");
             errorDiv.innerHTML = "<b>Oops !!! Data Fetch Unsuccessful For Selected Date. Please Try Again</b>";
             // removing spinner class to spinner div
             spinnerDiv.classList.remove("loader");
