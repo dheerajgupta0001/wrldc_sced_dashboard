@@ -31,7 +31,9 @@ export const setPlotTraces = (divId, plotData) => {
                 size: 15,
             },
         },
-        autosize: true,
+        autosize: false,
+        width: 1500,
+        height: 750,
         xaxis: {
             showgrid: false,
             zeroline: true,
@@ -52,6 +54,7 @@ export const setPlotTraces = (divId, plotData) => {
             showspikes: true,
             spikethickness: 1,
             showline: true,
+            automargin: true,
             titlefont: { color: "#000" },
             tickfont: { color: "#000", size: 18 },
             tickformat: "digits",
