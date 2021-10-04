@@ -16,6 +16,7 @@ using Core.Sms;
 using Infra.Services.Sms;
 using Application.Users;
 using Application.Common.Interfaces;
+using DNTCaptcha.Core;
 
 namespace Infra
 {
@@ -87,6 +88,17 @@ namespace Infra
             // Add Infra services
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ISmsSender, SmsSender>();
+
+            services.AddDNTCaptcha(options =>
+            {
+                // options.UseSessionStorageProvider(); // -> It doesn't rely on the server or client's times. Also it's the safest one.
+                // options.UseMemoryCacheStorageProvider(); // -> It relies on the server's times. It's safer than the CookieStorageProvider.
+                options.UseCookieStorageProvider() // -> It relies on the server and client's times. It's ideal for scalability, because it doesn't save anything in the server's memory.
+                .ShowThousandsSeparators(false)
+                .WithEncryptionKey(Guid.NewGuid().ToString());
+                // options.UseDistributedCacheStorageProvider(); // --> It's ideal for scalability using `services.AddStackExchangeRedisCache()` for instance.
+                // options.UseDistributedSerializationProvider();
+            });
 
             return services;
         }
