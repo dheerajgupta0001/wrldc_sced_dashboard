@@ -41,6 +41,11 @@
                 <input asp-for="UpUser.ConfirmPassword" class="form-control" />
                 <span asp-validation-for="UpUser.ConfirmPassword" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="UpUser.IsTwoFactorEnabled"></label>
+                <input asp-for="UpUser.IsTwoFactorEnabled" class="form-control" />
+                <span asp-validation-for="UpUser.IsTwoFactorEnabled" class="text-danger"></span>
+            </div>
             <button type="submit" class="btn btn-success">Save Changes</button>
         </form>
         <a asp-page="/Users/Index">Back to List</a>

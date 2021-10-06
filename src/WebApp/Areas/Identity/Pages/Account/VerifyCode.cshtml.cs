@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Core.Entities;
 
 namespace WebApp.Areas.Identity.Pages.Account
 {
+    [AllowAnonymous]
     public class VerifyCodeModel : PageModel
     {
         private readonly ILogger<VerifyCodeModel> _logger;

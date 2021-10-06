@@ -106,6 +106,20 @@ namespace Application.Users.Commands.EditUser
                 }
             }
 
+            // check if two factor authentication to be changed
+            if (user.TwoFactorEnabled != request.IsTwoFactorEnabled)
+            {
+                IdentityResult twoFactorChangeResult = await _userManager.SetTwoFactorEnabledAsync(user, request.IsTwoFactorEnabled);
+                if (twoFactorChangeResult.Succeeded)
+                {
+                    _logger.LogInformation($"two factor enabled = {request.IsTwoFactorEnabled}");
+                }
+                else
+                {
+                    identityErrors.AddRange(twoFactorChangeResult.Errors);
+                }
+            }
+
 
             foreach (IdentityError iError in identityErrors)
             {

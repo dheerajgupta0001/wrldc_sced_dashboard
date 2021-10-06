@@ -17,11 +17,13 @@ namespace Application.Users.Commands.EditUser
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
         public string UserRole { get; set; }
+        public bool IsTwoFactorEnabled { get; set; }
 
         public void Mapping(Profile profile)
         {
             profile.CreateMap<ApplicationUser, EditUserCommand>()
-                .ForMember(d => d.Username, opt => opt.MapFrom(s => s.UserName));
+                .ForMember(d => d.Username, opt => opt.MapFrom(s => s.UserName))
+                .ForMember(d => d.IsTwoFactorEnabled, opt => opt.MapFrom(s => s.TwoFactorEnabled));
         }
     }
 }

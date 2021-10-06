@@ -14,6 +14,7 @@ namespace Application.Users.Commands.CreateUser
         public string PhoneNumber { get; set; }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
+        public bool IsTwoFactorEnabled { get; set; }
         public string UserRole { get; set; }
     }
 }

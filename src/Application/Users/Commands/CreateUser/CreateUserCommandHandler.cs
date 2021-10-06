@@ -27,7 +27,8 @@ namespace Application.Users.Commands.CreateUser
             {
                 UserName = request.Username,
                 Email = request.Email,
-                PhoneNumber = request.PhoneNumber
+                PhoneNumber = request.PhoneNumber,
+                TwoFactorEnabled = request.IsTwoFactorEnabled
             };
             IdentityResult result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)

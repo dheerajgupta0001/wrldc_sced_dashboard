@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Core.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Users.Commands.SeedUsers
 {
@@ -19,13 +20,15 @@ namespace Application.Users.Commands.SeedUsers
             private readonly UserManager<ApplicationUser> _userManager;
             private readonly RoleManager<IdentityRole> _roleManager;
             private readonly IdentityInit _identityInit;
+            private readonly ILogger<SeedUsersCommandHandler> _logger;
             private readonly IAppDbContext _context;
 
-            public SeedUsersCommandHandler(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IdentityInit identityInit, IAppDbContext context)
+            public SeedUsersCommandHandler(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IdentityInit identityInit, IAppDbContext context, ILogger<SeedUsersCommandHandler> logger)
             {
                 _userManager = userManager;
                 _roleManager = roleManager;
                 _identityInit = identityInit;
+                _logger = logger;
                 _context = context;
             }
 
@@ -60,7 +63,8 @@ namespace Application.Users.Commands.SeedUsers
                     ApplicationUser user = new()
                     {
                         UserName = userName,
-                        Email = email
+                        Email = email,
+                        TwoFactorEnabled = role == SecurityConstants.AdminRoleString ? true : false
                     };
 
                     // push desired user object to DB
@@ -69,6 +73,17 @@ namespace Application.Users.Commands.SeedUsers
                     if (result.Succeeded)
                     {
                         _ = await _userManager.AddToRoleAsync(user, role);
+                        // verify user email
+                        string emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        IdentityResult emaiVerifiedResult = await _userManager.ConfirmEmailAsync(user, emailToken);
+                        if (emaiVerifiedResult.Succeeded)
+                        {
+                            _logger.LogInformation($"Email verified for new user {user.UserName} with id {user.Id} and email {user.Email}");
+                        }
+                        else
+                        {
+                            _logger.LogInformation($"Email verify failed for {user.UserName} with id {user.Id} and email {user.Email} due to errors {emaiVerifiedResult.Errors}");
+                        }
                     }
                 }
             }

@@ -69,7 +69,7 @@ namespace WebApp.Pages.Users
 
         public async Task InitSelectListItems()
         {
-            URoles = new SelectList(SecurityConstants.GetRoles());
+            URoles = await Task.FromResult(new SelectList(SecurityConstants.GetRoles()));
         }
     }
 }
