@@ -41,9 +41,9 @@ namespace Application.Users.Commands.SeedUsers
              * **/
             public async Task SeedUsers()
             {
-               
-                //await SeedUser(_identityInit.AdminUserName, _identityInit.AdminEmail,
-                //    _identityInit.AdminPassword, SecurityConstants.AdminRoleString);
+
+                await SeedUser(_identityInit.AdminUserName, _identityInit.AdminEmail,
+                    _identityInit.AdminPassword, SecurityConstants.AdminRoleString);
                 await SeedUser(_identityInit.GuestUserName, _identityInit.GuestEmail,
                     _identityInit.GuestPassword, SecurityConstants.GuestRoleString);
             }
@@ -82,9 +82,6 @@ namespace Application.Users.Commands.SeedUsers
                 {
                     await SeedRole(r);
                 }
-                //await SeedRole(SecurityConstants.GuestRoleString);
-                //await SeedRole(SecurityConstants.AdminRoleString);
-                //await SeedRole(SecurityConstants.EmployeeRoleString);
             }
 
             /**

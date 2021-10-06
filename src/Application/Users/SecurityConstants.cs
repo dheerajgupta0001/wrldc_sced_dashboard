@@ -6,7 +6,7 @@ namespace Application.Users
     public static class SecurityConstants
     {
         public const string GuestRoleString = "GuestUser";
-        //public const string AdminRoleString = "Administrator";
+        public const string AdminRoleString = "Administrator";
         //public const string EmployeeRoleString = "Employee";
         public static List<string> GetRoles()
         {
