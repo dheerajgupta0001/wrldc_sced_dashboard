@@ -1,0 +1,29 @@
+﻿@page
+@model WebApp.Pages.Users.DetailsModel
+@{
+    ViewData["Title"] = "My Details";
+}
+
+<h3>My Details</h3>
+
+<table class="table table-bordered table-striped">
+    <tr>
+        <td>Name</td>
+        <td>@Model.CUser.Username</td>
+    </tr>
+    <tr>
+        <td>Email</td>
+        <td>@Model.CUser.Email</td>
+    </tr>
+    <tr>
+        <td>Phone</td>
+        <td>@Model.CUser.PhoneNumber</td>
+    </tr>
+    <tr>
+        <td>Role</td>
+        <td>@Model.CUser.UserRole</td>
+    </tr>
+</table>
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>

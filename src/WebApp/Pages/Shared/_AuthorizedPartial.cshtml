@@ -8,6 +8,12 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
+    @if (User.IsInRole(SecurityConstants.AdminRoleString))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-light" asp-page="/Users/Index">Users</a>
+        </li>
+    }
     <li class="nav-item">
         <a class="nav-link text-light" asp-page="/Sced/ScedStackedBar">SCED</a>
     </li>

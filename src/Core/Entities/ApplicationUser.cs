@@ -14,3 +14,4 @@ namespace Core.Entities
 
     }
 }
+
