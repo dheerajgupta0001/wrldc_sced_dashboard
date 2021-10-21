@@ -97,8 +97,7 @@ const fetchData = async () => {
         $(`#summaryTbl`).DataTable().destroy();
         $(`#summaryTbl`).DataTable({
             dom: "Bfrtip",
-            lengthMenu: [25, 192, 188],
-            
+            lengthMenu: [100, 150, 200],
             data: summaryPgAllRows,
             order: [[15, "desc"]],
             columns: [

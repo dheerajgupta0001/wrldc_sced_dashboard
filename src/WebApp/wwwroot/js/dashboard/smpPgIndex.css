@@ -1,0 +1,67 @@
+﻿#errorDiv {
+    color: #dc3545;
+}
+
+label {
+    color: #0062cc;
+    font-weight: 500;
+}
+input {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+    border-radius: 10px;
+}
+.choices__input {
+    border-radius: 25px;
+    border: 2px solid #73ad21;
+    padding: 2px;
+    /*height: 40px;*/
+}
+
+.choices__inner {
+    border-radius: 25px;
+   /* height: 70px;*/
+}
+
+.hrStyle {
+    height: 10px;
+    border: 0;
+    box-shadow: 0 10px 10px -10px #8c8b8b inset;
+}
+
+/*for loading spinner*/
+
+.loader {
+    border: 16px solid #f3f3f3;
+    margin: 0 auto;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 60px;
+    height: 60px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

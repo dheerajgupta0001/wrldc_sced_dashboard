@@ -4,7 +4,7 @@ namespace Application.Schedules.Queries.GetSchedules
 {
     public class SchResponse
     {
-        public Dictionary<int, List<SchTsRow>> GenSchedules { get; set; }
+        public Dictionary<int, List<SchTsRow>> GenSchedules { get; set; } = new();
     }
 
     public class SchTsRow

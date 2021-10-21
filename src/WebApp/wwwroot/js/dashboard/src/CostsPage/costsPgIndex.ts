@@ -180,6 +180,7 @@ const fetchData = async () => {
                   hoverYaxisDisplay: "Rs",
                   line: {
                       width: 4,
+                      color: "#34A853"
                   },
                   fill: "tozeroy",
               };

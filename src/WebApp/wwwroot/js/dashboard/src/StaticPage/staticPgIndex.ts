@@ -36,8 +36,7 @@ const fetchData = async () => {
     $(`#staticTbl`).DataTable().destroy();
     $(`#staticTbl`).DataTable({
         dom: "Bfrtip",
-        lengthMenu: [25, 192, 188],
-
+        lengthMenu: [50, 100, 150],
         data: allGenData,
         //fixedHeader: true,
         //order: [[15, "desc"]],
