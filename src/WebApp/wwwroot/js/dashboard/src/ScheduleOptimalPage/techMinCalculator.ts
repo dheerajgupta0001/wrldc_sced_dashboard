@@ -47,7 +47,7 @@ export const calTmAllGenApi = async (
   // getting unique values
   timestampVal = [...new Set(timestampVal)];
 
-  //now allGenSchData contains tmdata for each generator. now we have to sum blockwise
+  //now allGenTmData contains tmdata for each generator. now we have to sum blockwise
   timestampVal.forEach((timestamp: string, index) => {
     let tmObj: SchTsRowObj;
     let tmstore = 0;
@@ -88,16 +88,18 @@ export const calTmSingleGenApi = async (
     }
   });
   // creating tmData list by using derived tmPu and avgPuCap
-  if (tmPu != 0 && avgPuCap != 0) {
-  }
-  onBarDcData.forEach((value: SchTsRowObj, index) => {
-    try {
-      let noUnits = Math.ceil((value.schVal * 0.95) / avgPuCap);
-      let tmPerBlock = noUnits * tmPu;
-      tmData.push({ schTime: value.schTime, schVal: tmPerBlock });
-    } catch (err) {
-      console.log(err);
+    if (avgPuCap != 0) {
+        onBarDcData.forEach((value: SchTsRowObj, index) => {
+            try {
+                let noUnits = Math.ceil((value.schVal * 0.95) / avgPuCap);
+                let tmPerBlock = noUnits * tmPu;
+                tmData.push({ schTime: value.schTime, schVal: tmPerBlock });
+            } catch (err) {
+                console.log(err);
+            }
+        });
     }
-  });
+    
+  
   return tmData;
 };

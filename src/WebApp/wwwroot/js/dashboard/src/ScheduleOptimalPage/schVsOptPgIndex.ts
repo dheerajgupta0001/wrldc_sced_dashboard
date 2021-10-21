@@ -162,6 +162,7 @@ const fetchData = async () => {
                   tmData = await calTmAllGenApi(startDateValue, endDateValue);
               }
               else {
+                  //calculating tmdata in case of single generator
                   tmData = await calTmSingleGenApi(
                       onBarDcData,
                       selectedGeneratorsList[genInd].id

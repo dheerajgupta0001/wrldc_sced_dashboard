@@ -1,89 +1,70 @@
 ﻿@page
-@model WebApp.Pages.Sced.SummaryModel
-
+@model WebApp.Pages.Sced.MetricsDataModel
 @{
-    ViewData["Title"] = "Summary";
 }
 
 <div class="mt-3 ml-5">
-    <div class="row">
-        <div class="col-md-3">
+    <div class="row mb-4" >
+        <div class="col-md-2">
             <label for="startDate">Start Date</label>
             <input type="date" name="startDate" id="startDate" />
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="endDate">End Date</label>
             <input type="date" name="endDate" id="endDate" />
         </div>
-
-        <div class="col-md-3 align-self-center mt-4">
+        <div class="col-md-2">
+            <label for="metricName">Metric</label>
+            <select id="metricName"
+                    name="metricName"
+                    placeholder="Select Metric">
+                <option value="sch">Schedule</option>
+                <option value="opt">Optimal Schedule</option>
+                <option value="onbar">OnBar DC</option>
+                <option value="tm">Tech Min</option>
+                <option value="vcPu">Variable Cost</option>
+                <option value="rampUpPu">Ramp-Up/Blk</option>
+                <option value="rampDownPu">Ramp-Down/Blk</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="generators">Generators</label>
+            <select id="generators"
+                    name="generators"
+                    placeholder="Select Generators"
+                    multiple>
+            </select>
+        </div>
+        <div class="col-md-2 align-self-center mt-4">
             <button type="button" class="btn btn-primary" id="submitBtn">
                 Submit
             </button>
         </div>
     </div>
     <div id="errorDiv"></div>
-    <div id="spinner"></div>
-    <div>
-        <table id="summaryTbl"
+    <div id="metricsData">
+        <table id="metricsDataTbl"
                class="table table-bordered table-hover display w-auto"
                style="width: 100%">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-            <tfoot>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tfoot>
         </table>
     </div>
+
+    <div id="spinner"></div>
 </div>
 
 @section Scripts {
+
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css" />
-    <link rel="stylesheet" href="~/js/dashboard/summary.css" />
+    <link rel="stylesheet" href="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006288/BBBootstrap/choices.min.css?version=7.0.0">
+    <link rel="stylesheet" href="~/js/dashboard/metricsData.css" />
     <link rel="stylesheet" href="~/js/dashboard/node_modules/datatables.net-dt/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="~/js/dashboard/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.dataTables.min.css">
-    <link rel="stylesheet" href="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006288/BBBootstrap/choices.min.css?version=7.0.0">
+
 
     <script src="~/js/dashboard/node_modules/plotly.js-dist/plotly.js"></script>
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-    @*<script src="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006273/BBBootstrap/choices.min.js?version=7.0.0"></script>*@
+    <script src="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006273/BBBootstrap/choices.min.js?version=7.0.0"></script>
     <script src="~/js/dashboard/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="~/js/dashboard/node_modules/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
@@ -94,7 +75,7 @@
     <script src="~/js/dashboard/node_modules/pdfmake/build/pdfmake.min.js"></script>
     <script src="~/js/dashboard/node_modules/pdfmake/build/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js" type="text/javascript"></script>
-    <script src="~/js/dashboard/dist/summaryPgIndex.js"></script>
+    <script src="~/js/dashboard/dist/metricsDataPgIndex.js"></script>
 
 
 }

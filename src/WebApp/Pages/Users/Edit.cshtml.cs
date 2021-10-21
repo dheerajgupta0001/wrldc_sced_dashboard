@@ -53,14 +53,14 @@ namespace WebApp.Pages.Users
 
             UpUser = _mapper.Map<EditUserCommand>(user);
 
-            await InitSelectListItems();
+            InitSelectListItems();
 
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            await InitSelectListItems();
+            InitSelectListItems();
 
             ValidationResult validationCheck = new EditUserCommandValidator().Validate(UpUser);
             validationCheck.AddToModelState(ModelState, nameof(UpUser));
@@ -87,7 +87,7 @@ namespace WebApp.Pages.Users
             return Page();
         }
 
-        public async Task InitSelectListItems()
+        public void InitSelectListItems()
         {
             URoles = new SelectList(SecurityConstants.GetRoles());
         }

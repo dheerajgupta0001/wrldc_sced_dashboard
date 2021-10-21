@@ -25,7 +25,21 @@ module.exports = {
             __dirname,
             "src/ScedStackedBarPage/scedStackedBarPgIndex.ts"
         ),
-    ],
+        ],
+    staticPgIndex: [
+        "babel-polyfill",
+        path.resolve(
+            __dirname,
+            "src/StaticPage/staticPgIndex.ts"
+        ),
+        ],
+        metricsDataPgIndex: [
+            "babel-polyfill",
+            path.resolve(
+                __dirname,
+                "src/MetricsPage/metricsDataPgIndex.ts"
+            ),
+        ]
   },
 
   output: {

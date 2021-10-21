@@ -1,12 +1,25 @@
-﻿#errorDiv {
+﻿
+#errorDiv {
     color: #dc3545;
+}
+#metricName {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: inset;
+    border-color: #696969;
+    border-image: initial;
 }
 
 label {
     color: #0062cc;
     font-weight: 500;
+    display: block;
 }
-
 input {
     display: block;
     width: 100%;
@@ -15,7 +28,6 @@ input {
     box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
     border-radius: 10px;
 }
-
 .choices__input {
     border-radius: 25px;
     border: 2px solid #73ad21;
@@ -25,8 +37,9 @@ input {
 
 .choices__inner {
     border-radius: 25px;
-    /* height: 70px;*/
+   /* height: 70px;*/
 }
+
 
 th {
     color: white;
@@ -60,22 +73,8 @@ input.dt-button {
     transition: all 0.5s;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
 }
-
-tfoot tr th {
-    color: #dc3545;
-    background: white;
-    font-size: 12px;
-    font-weight: bolder;
-    animation: blinker 1s linear infinite;
-}
-
-@keyframes blinker {
-    50% {
-        opacity: 0;
-    }
-}
-
 /*for loading spinner*/
+
 .loader {
     border: 16px solid #f3f3f3;
     margin: 0 auto;
