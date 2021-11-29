@@ -7,11 +7,11 @@
 
 <div class="mt-3 ml-5">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="startDate">Start Date</label>
             <input type="date" name="startDate" id="startDate" />
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="endDate">End Date</label>
             <input type="date" name="endDate" id="endDate" />
         </div>
@@ -23,7 +23,21 @@
                     multiple>
             </select>
         </div>
-        <div class="col-md-3 align-self-center mt-4">
+        <div class="col-md-2">
+            <label for="revNo">Revision No</label>
+            <select id="revNo"
+                    name="revNo">
+                @*value =0 for dayahead, -1 for latest revision, -2 for other random revision*@
+                <option value="0">Latest</option>
+                <option value="-1">0(zero)</option>
+                <option value="-2">Others</option>
+            </select>
+        </div>
+        <div class="col-md-1">
+            <label for="otherRevNo" id= "otherRevNoLbl" hidden>Type Rev No</label>
+            <input type="number"  name="otherRevNo" id="otherRevNo" hidden/>
+        </div>
+        <div class="col-md-2 align-self-center mt-4">
             <button type="button" class="btn btn-primary" id="submitBtn">
                 Submit
             </button>

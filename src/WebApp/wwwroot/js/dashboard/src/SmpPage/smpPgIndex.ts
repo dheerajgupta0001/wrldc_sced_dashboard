@@ -62,18 +62,27 @@ const fetchData = async () => {
                 startDateValue,
                 endDateValue
             );
+
+            smpData.forEach((smpSingleData, ind) => {
+                if (smpSingleData.schVal > 800) {
+                    smpSingleData.schVal=449
+                }
+                if (smpSingleData.schVal <= 0) {
+                    smpSingleData.schVal = 75
+                }
+            })
             let smpPlotData: PlotData = {
                 title: `System Marginal Price(SMP)`,
                 traces: [],
 
-                yAxisTitle: "SMP"
+                yAxisTitle: "SMP(Paise/Kwh)"
             };
 
             let smpDataTrace: PlotTrace = {
                 name: "SMP",
                 data: smpData,
                 type: "scatter",
-                hoverYaxisDisplay: "",
+                hoverYaxisDisplay: "SMP(Paise/Kwh)",
                 line: {
                     width: 4,
                     color: '#34A853'
