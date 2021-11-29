@@ -48,10 +48,12 @@ namespace Application.Schedules.Queries.GetSchedules
                                 and sch_time between @startDate and @endDate order by sch_time";
                 if (request.GenId == -1)
                 {
+                    // get all generators schedules individually
                     cmdStr.Replace("and g_id = @g_id", "");
                 }
                 else if (request.GenId == 0)
                 {
+                    // get all generators schedules combined
                     cmdStr = @"SELECT 0 as g_id, sch_time, sum(sch_val) FROM public.gens_data 
                                 where sch_type = @schType
                                 and rev = @rev
@@ -59,6 +61,7 @@ namespace Application.Schedules.Queries.GetSchedules
                                 group by sch_time 
                                 order by sch_time";
                 }
+                
                 NpgsqlCommand command = new(cmdStr, conn);
                 command.Parameters.AddWithValue("@schType", request.SchType);
                 if (request.GenId != -1 && request.GenId != 0)
@@ -89,6 +92,10 @@ namespace Application.Schedules.Queries.GetSchedules
                 }
                 dr.Dispose();
                 conn.Close();
+                // TODO
+                // if rev = -1, get the latest revision number for each desired days
+                // fetch the data for each day
+                // combine all days data and send to results
                 return res;
             }
         }
