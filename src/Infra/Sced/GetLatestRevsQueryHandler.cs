@@ -19,7 +19,7 @@ namespace Infra.Sced
             conn.Open();
 
             string cmdStr = @"SELECT rev_date, latest_guj_rev, latest_rev FROM public.daywise_latest_revs 
-                                where rev_date between @startDate and @endDate order by data_time";
+                                where rev_date between @startDate and @endDate order by rev_date";
 
             NpgsqlCommand command = new(cmdStr, conn);
             command.Parameters.AddWithValue("@startDate", startTime.Date);

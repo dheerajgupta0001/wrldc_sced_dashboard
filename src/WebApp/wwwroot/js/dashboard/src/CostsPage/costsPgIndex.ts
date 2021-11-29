@@ -174,7 +174,7 @@ const fetchData = async () => {
                 let schfetchedData: SchRespObj = await getSchData(
                     selectedGeneratorsList[genInd].id,
                     "sch",
-                    0,
+                    +revNo,
                     startDateValue,
                     endDateValue
                 );
@@ -183,7 +183,7 @@ const fetchData = async () => {
                 let optFetchedData: SchRespObj = await getSchData(
                     selectedGeneratorsList[genInd].id,
                     "opt",
-                    0,
+                    +revNo,
                     startDateValue,
                     endDateValue
                 );
@@ -191,7 +191,7 @@ const fetchData = async () => {
                     optFetchedData.genSchedules[selectedGeneratorsList[genInd].id];
 
                 if (selectedGeneratorsList[genInd].id == 0) {
-                    costRedData = await calCostRedForAllGen(startDateValue, endDateValue);
+                    costRedData = await calCostRedForAllGen(startDateValue, endDateValue, +revNo);
                 } else {
                     costRedData = await calCostRedForSingleGen(
                         optSchData,
