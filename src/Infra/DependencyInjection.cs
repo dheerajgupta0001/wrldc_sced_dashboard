@@ -17,6 +17,8 @@ using Infra.Services.Sms;
 using Application.Users;
 using Application.Common.Interfaces;
 using DNTCaptcha.Core;
+using Core.Sced;
+using Infra.Sced;
 
 namespace Infra
 {
@@ -88,6 +90,7 @@ namespace Infra
             // Add Infra services
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ISmsSender, SmsSender>();
+            services.AddTransient<IScedDataFetchService, ScedDataFetchService>();
 
             services.AddDNTCaptcha(options =>
             {

@@ -1,4 +1,5 @@
 ﻿using Application.Schedules.Queries.GetSchedules;
+using Core.Sced;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Application.Schedules.Queries.GetSchedules
+namespace Core.Sced
 {
     public class SchResponse
     {
