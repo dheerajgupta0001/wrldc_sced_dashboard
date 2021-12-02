@@ -2,14 +2,14 @@
 import { SchRespObj, AllGenRespObj, SchTsRowObj } from "../respObj";
 import { generateTimestamp } from "../timeUtils";
 
-export const calculateMetrics = async (selectedMetricVal: string, genId: number, startTime: string, endTime: string): Promise<SchTsRowObj[] | null> => {
+export const calculateMetrics = async (selectedMetricVal: string, genId: number, startTime: string, endTime: string, revNo:number): Promise<SchTsRowObj[] | null> => {
 
     if (selectedMetricVal === 'sch' || selectedMetricVal === 'opt' || selectedMetricVal === 'onbar') {
         let schData: SchTsRowObj[] = [];
         let schfetchedData: SchRespObj = await getSchData(
            genId,
             selectedMetricVal,
-            0,
+            revNo,
             startTime,
             endTime
         );
@@ -27,7 +27,7 @@ export const calculateMetrics = async (selectedMetricVal: string, genId: number,
         let onbarfetchedData: SchRespObj = await getSchData(
             genId,
             "onbar",
-            0,
+            revNo,
             startTime,
             endTime
         );

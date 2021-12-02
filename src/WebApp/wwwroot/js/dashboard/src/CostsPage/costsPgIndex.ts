@@ -1,3 +1,4 @@
+
 // declare var $:any;
 declare var Choices: any;
 import { getAllGenData, getSchData } from "../fetchDataApi";
@@ -242,9 +243,11 @@ const fetchData = async () => {
                     normalCost = await calCostForAllGen(
                         startDateValue,
                         endDateValue,
-                        "sch"
+                        "sch",
+                        +revNo
+
                     );
-                    optCost = await calCostForAllGen(startDateValue, endDateValue, "opt");
+                    optCost = await calCostForAllGen(startDateValue, endDateValue, "opt", +revNo);
                 }
                 else {
                     normalCost = await calCostForSingleGen(

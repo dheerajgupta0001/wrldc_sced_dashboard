@@ -14,7 +14,8 @@ import {
 export const calculateSummary = async (
     startDateValue: string,
     endDateValue: string,
-    genObj: AllGenRespObj
+    genObj: AllGenRespObj,
+    revNo:number
 ): Promise<SummaryPgRow> => {
     let summaryPgRow: SummaryPgRow = {
         plantName: genObj.name,
@@ -38,7 +39,7 @@ export const calculateSummary = async (
     const genSchFetcData: SchRespObj = await getSchData(
         genObj.id,
         "sch",
-        0,
+        revNo,
         startDateValue,
         endDateValue
     );
@@ -47,7 +48,7 @@ export const calculateSummary = async (
     const genOptSchFetcData: SchRespObj = await getSchData(
         genObj.id,
         "opt",
-        0,
+        revNo,
         startDateValue,
         endDateValue
     );
@@ -57,7 +58,7 @@ export const calculateSummary = async (
     const genOnbarDcFetcData: SchRespObj = await getSchData(
         genObj.id,
         "onbar",
-        0,
+        revNo,
         startDateValue,
         endDateValue
     );

@@ -9,7 +9,8 @@ import { getAllGenData, getSchData } from "../fetchDataApi";
 export const calCostForAllGen = async (
   startDateValue: string,
   endDateValue: string,
-  schType: string
+    schType: string,
+  revNo:number
 ): Promise<SchTsRowObj[]> => {
   let allGenIds: number[] = [];
   let timestampVal: string[] = [];
@@ -19,8 +20,8 @@ export const calCostForAllGen = async (
   const allGenData: AllGenRespObj[] = await getAllGenData();
   const allGenSchData: SchRespObj = await getSchData(
     -1,
-    schType,
-    0,
+      schType,
+      revNo,
     startDateValue,
     endDateValue
   );

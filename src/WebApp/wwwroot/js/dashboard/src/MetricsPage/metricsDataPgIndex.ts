@@ -31,7 +31,26 @@ window.onload = async () => {
         searchResultLimit: 50,
         renderChoiceLimit: 50,
     });
+    // selecting other revision number input=number field(by default hidden)
+    const otherRevNo = document.getElementById("otherRevNo") as HTMLInputElement
 
+    // selecting other revision number label elemne(by default hidden)
+    const otherRevNoLabel = document.getElementById("otherRevNoLbl") as HTMLLabelElement
+
+    // selecting revno dropdown field
+    const revNo = document.getElementById("revNo") as HTMLSelectElement
+
+    //enabling/disabling otherRevnumber(type= number) based on selection of value from revNo(0=DA, -1=current, -2=other manual revision)
+    revNo.addEventListener('change', function () {
+        if (this.value == "-2") {
+            otherRevNo.hidden = false
+            otherRevNoLabel.hidden = false
+        }
+        else {
+            otherRevNo.hidden = true
+            otherRevNoLabel.hidden = true
+        }
+    });
     (document.getElementById("submitBtn") as HTMLButtonElement).onclick =
         fetchData;
 };
@@ -43,6 +62,11 @@ const fetchData = async () => {
     //to display spinner 
     const spinnerDiv = document.getElementById("spinner") as HTMLDivElement;
 
+    // selecting other revision number input=number field(by default disabled)
+    const otherRevNo = (document.getElementById("otherRevNo") as HTMLInputElement).value
+
+    // selecting revno dropdown field
+    let revNo = (document.getElementById("revNo") as HTMLSelectElement).value
 
     //get user inputs
     let startDateValue = (
@@ -90,6 +114,10 @@ const fetchData = async () => {
         errorDiv.classList.add("mt-4", "mb-4", "alert", "alert-danger")
         errorDiv.innerHTML =
             "<b> Ooops !! End Date should be greater or Equal to Start Date </b>";
+    } else if (revNo === "-2" && otherRevNo === "") {
+        errorDiv.classList.add("mt-4", "mb-4", "alert", "alert-danger")
+        errorDiv.innerHTML =
+            "<b> After selecting other revision no. please type other revision number </b>";
     } else {
         let allgenData: interMediateAllGenDataStore = {};
         let desiredTblData :string[][]= []
@@ -105,10 +133,15 @@ const fetchData = async () => {
         //adding spinner class to spinner div
         spinnerDiv.classList.add("loader")
 
+        // getting revision number value
+        if (revNo == "-2") {
+            revNo = otherRevNo
+        }
+
         try {
             //getting data for eachh generator one by one and adding key val pair to allgenData dict, where key is genId and val is List of SchTsRowObj
             for (let genInd = 0; genInd < selectedGeneratorsList.length; genInd++) {
-                const genData: SchTsRowObj[] = await calculateMetrics(selectedMetricVal, selectedGeneratorsList[genInd].id, startDateValue, endDateValue)
+                const genData: SchTsRowObj[] = await calculateMetrics(selectedMetricVal, selectedGeneratorsList[genInd].id, startDateValue, endDateValue, +revNo)
                 allgenData[selectedGeneratorsList[genInd].id] = genData
             }
             //no. of rows of table

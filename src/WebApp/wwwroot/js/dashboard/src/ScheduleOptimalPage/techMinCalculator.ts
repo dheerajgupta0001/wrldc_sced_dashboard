@@ -8,7 +8,8 @@ import { getAllGenData, getSchData } from "../fetchDataApi";
 
 export const calTmAllGenApi = async (
   startDateValue: string,
-  endDateValue: string
+    endDateValue: string,
+  revNo:number
 ): Promise<SchTsRowObj[]> => {
   let allGenIds: number[] = [];
   let timestampVal: string[] = [];
@@ -18,8 +19,8 @@ export const calTmAllGenApi = async (
   const allGenData: AllGenRespObj[] = await getAllGenData();
   const allGenOnBarData: SchRespObj = await getSchData(
     -1,
-    "onbar",
-    0,
+      "onbar",
+      revNo,
     startDateValue,
     endDateValue
   );

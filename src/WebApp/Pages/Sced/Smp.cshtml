@@ -15,7 +15,21 @@
             <label for="endDate">End Date</label>
             <input type="date" name="endDate" id="endDate" />
         </div>
-        <div class="col-md-3 align-self-center mt-4">
+        <div class="col-md-2">
+            <label for="revNo">Revision No</label>
+            <select id="revNo"
+                    name="revNo">
+                @*value =0 for dayahead, -1 for latest revision, -2 for other random revision*@
+                <option value="-1">Latest</option>
+                <option value="0">0 (Zero)</option>
+                <option value="-2">Others</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="otherRevNo" id="otherRevNoLbl" hidden>Type Rev No</label>
+            <input type="number" name="otherRevNo" id="otherRevNo" hidden />
+        </div>
+        <div class="col-md-2 align-self-center mt-4">
             <button type="button" class="btn btn-primary" id="submitBtn">
                 Submit
             </button>
