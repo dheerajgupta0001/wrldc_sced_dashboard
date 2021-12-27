@@ -14,7 +14,6 @@ namespace Infra.Sced
     public partial class ScedDataFetchService : IScedDataFetchService
     {
         private readonly string _scedConnStr;
-        // TODO get latest revs info query handler to be implemented
 
         public ScedDataFetchService(IConfiguration configuration)
         {
@@ -39,5 +38,10 @@ namespace Infra.Sced
             return res;
         }
 
+        public async Task<List<RevisionInfo>> GetRevs(DateTime startTime, DateTime endTime, CancellationToken cancellationToken)
+        {
+            List<RevisionInfo> res = await GetRevsQueryHandler.Handle(_scedConnStr, startTime, endTime, cancellationToken);
+            return res;
+        }
     }
 }

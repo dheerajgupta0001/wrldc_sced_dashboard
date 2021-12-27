@@ -1,0 +1,123 @@
+﻿@page
+@model WebApp.Pages.Sced.RevisionsModel
+@{
+    ViewData["Title"] = "Revisions";
+}
+
+<div class="container">
+    <form method="post">
+        <label asp-for="Query.StartTime"></label>
+        <input asp-for="Query.StartTime" type="date" />
+        <span asp-validation-for="Query.StartTime" class="text-danger"></span>
+        <label asp-for="Query.EndTime" class="ml-3"></label>
+        <input asp-for="Query.EndTime" type="date" />
+        <span asp-validation-for="Query.EndTime" class="text-danger"></span>
+        <button type="submit" class="btn btn-primary ml-3">Load</button>
+    </form>
+    <div class="mt-1">
+        @if (Model.Revisions == null || Model.Revisions.Count == 0)
+        {
+            <h4>No Revisions found to display</h4>
+        }
+        else
+        {
+            <table class="table table-bordered table-hover display" id="display_table">
+                <thead>
+                    <tr>
+                        <th>Revision Date</th>
+                        <th>Revision Number</th>
+                        <th>Gujarat Revision</th>
+                        <th>Revision Creation Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var rev in Model.Revisions)
+                    {
+                        <tr>
+                            <td>
+                                <label class="hiddenDate">@rev.RevDate.ToString("yyyy-MM-dd")</label>@rev.RevDate.ToString("dd-MMM-yyyy")
+                            </td>
+                            <td>
+                                @rev.LocalRev
+                            </td>
+                            <td>
+                                @rev.RemoteRev
+                            </td>
+                            <td>
+                                @rev.RevExecTime.ToString("yyyy-MM-dd HH:mm:ss")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Revision Date</th>
+                        <th>Revision Number</th>
+                        <th>Gujarat Revision</th>
+                        <th>Revision Creation Time</th>
+                    </tr>
+                </tfoot>
+            </table>
+        }
+    </div>
+</div>
+
+@section Scripts{
+    <link rel="stylesheet" href="~/js/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" href="~/css/datatables/fixedHeader.dataTables.min.css" />
+    <link rel="stylesheet" href="~/js/node_modules/datatables.net-buttons-dt/css/buttons.dataTables.min.css" />
+    <script src="~/js/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/js/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/node_modules/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/js/node_modules/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="~/js/node_modules/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/js/node_modules/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="~/js/node_modules/jszip/dist/jszip.min.js"></script>
+    <script src="~/js/node_modules/pdfmake/build/pdfmake.min.js"></script>
+    <script src="~/js/node_modules/pdfmake/build/vfs_fonts.js"></script>
+    <script src="~/js/node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // https://datatables.net/examples/api/multi_filter.html
+            // Setup - add a text input to each footer cell
+            $('#display_table tfoot th').each(function () {
+                //var title = $(this).text();
+                $(this).html('<input type="text" placeholder="Search" />');
+            });
+            var display_table = $('#display_table').DataTable({
+                fixedHeader: true,
+                "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, "All"]],
+                "pageLength": 50,
+                dom: 'Bfrtip',
+                "order": [[0, "desc"], [1, "desc"]],
+                buttons: ['pageLength', 'copy', 'csv', 'excel', 'pdf', 'print']
+            });
+            var r = $('#display_table tfoot tr');
+            r.find('th').each(function () {
+                $(this).css('padding', '3px');
+            });
+            $('#display_table thead').append(r);
+            // Apply the filter
+            // https://www.jqueryscript.net/demo/DataTables-Jquery-Table-Plugin/examples/api/multi_filter.html
+            $("#display_table thead input").on('keyup change', function () {
+                display_table
+                    .column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            });
+        });
+    </script>
+    <style>
+        thead input {
+            padding: 2px;
+            box-sizing: border-box;
+            font-size: small;
+            width: 100%
+        }
+
+        .hiddenDate {
+            color: transparent;
+            font-size: 0.1em
+        }
+    </style>
+}

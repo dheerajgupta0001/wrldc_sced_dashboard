@@ -19,7 +19,6 @@ namespace Infra.Persistence
     {
         private readonly ICurrentUserService _currentUserService;
        
-
         public AppDbContext(DbContextOptions<AppDbContext> options, ICurrentUserService currentUserService)
             : base(options)
         {

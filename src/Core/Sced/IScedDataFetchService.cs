@@ -12,5 +12,6 @@ namespace Core.Sced
         Task<SchResponse> GetSchedules(string schType, int genId, DateTime startTime, DateTime endTime, int rev, CancellationToken cancellationToken);
         Task<List<SchTsRow>> GetSmp(string regionTag, DateTime startTime, DateTime endTime, int rev, CancellationToken cancellationToken);
         Task<Dictionary<DateTime, (int gujRev, int localRev)>> GetLatestRevs(DateTime startTime, DateTime endTime, CancellationToken cancellationToken);
+        Task<List<RevisionInfo>> GetRevs(DateTime startTime, DateTime endTime, CancellationToken cancellationToken);
     }
 }

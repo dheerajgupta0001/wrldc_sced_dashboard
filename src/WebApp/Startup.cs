@@ -36,7 +36,9 @@ namespace WebApp
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddApplication();
             services.AddInfrastructure(Configuration, Environment);
-            services.AddRazorPages().AddMvcOptions(o => o.Filters.Add(new AuthorizeFilter()));
+            services.AddRazorPages()
+                .AddMvcOptions(o => o.Filters.Add(new AuthorizeFilter()))
+                .AddRazorRuntimeCompilation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,7 +76,6 @@ namespace WebApp
         }
         public async Task SeedData(IMediator mediator)
         {
-           
             _ = await mediator.Send(new SeedUsersCommand());
         }
     }
